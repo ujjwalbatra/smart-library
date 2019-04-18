@@ -1,5 +1,7 @@
 import getpass
 
+from reception_pi.util import input_validation
+
 
 class ReceptionApplication(object):
 
@@ -29,7 +31,34 @@ class ReceptionApplication(object):
                     try_login = 1
 
     def handle_register(self):
-        pass
+
+        validate_input = input_validation.InputValidation
+
+        while True:
+            email = input("\nEnter an Email Address: ")
+            email = email.strip()  # remove leading and trailing spaces
+            email_is_valid = validate_input.validate_email(email)
+
+            if not email_is_valid:
+                print("Invalid Email Address. Try again.")
+                continue
+
+            username = input("\nEnter Username (must be at-least 5 characters, no special characters allowed): ")
+            username = username.strip()  # remove leading and trailing spaces
+            username_is_valid = validate_input.validate_username(username)
+
+            if not username_is_valid:
+                print("Invalid username. Try again.")
+                continue
+
+            password = getpass.getpass(prompt='Password (must be at-least 5 characters, '
+                                              'no other special characters apart from * # $ @ ! % ^ allowed): ')
+            password = password.strip()  # remove leading and trailing spaces
+            password_is_valid = validate_input.validate_password(password)
+
+            if not password_is_valid:
+                print("Invalid password. Try again.")
+                continue
 
     def main(self):
         quit_reception_application = False

@@ -24,7 +24,7 @@ class InputValidation(object):
     def validate_username(username: str):
         """
         checks whether the username is of length 5 minimum, and contains only a-z (lowercase characters)
-        or A-Z (uppercase characters) or 0-9 (digits). **no special characters allowed**
+        or A-Z (uppercase characters) or 0-9 (digits). **no special characters and space allowed**
 
         Args:
             username: username to be validated
@@ -33,7 +33,7 @@ class InputValidation(object):
             boolean: a boolean specifying whether the username is valid or not
         """
 
-        is_valid = re.search("[0-9a-zA-Z]{5,}", username)
+        is_valid = re.search("[0-9a-zA-Z\S]{5,}", username)
 
         if is_valid:
             return True
