@@ -44,7 +44,8 @@ class InputValidation(object):
     def validate_password(password: str):
         """
         checks whether the username is of length 6 minimum, and contains only a-z (lowercase characters),
-        A-Z (uppercase characters), 0-9 (digits) or special characters (supports only: * # $ @ ! % ^)
+        A-Z (uppercase characters), 0-9 (digits) or special characters (supports only: * # $ @ ! % ^).
+        **no spaces allowed**
 
         Args:
             password: password to be validated
@@ -53,7 +54,7 @@ class InputValidation(object):
             boolean: a boolean specifying whether the username is valid or not
         """
 
-        is_valid = re.search("[0-9a-zA-Z*#$@!%^]{6,}", password)
+        is_valid = re.search("[0-9a-zA-Z*#$@!%^\S]{6,}", password)
 
         if is_valid:
             return True
