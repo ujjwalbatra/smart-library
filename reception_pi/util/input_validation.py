@@ -7,7 +7,7 @@ class InputValidation(object):
     @staticmethod
     def validate_email(email: str):
         """
-        checks whether the email address is valid or not
+        checks whether the email address is valid or not. Accepted email format is _______@______._________
 
         Args:
             email: email address to be validated
@@ -60,3 +60,5 @@ class InputValidation(object):
             return True
 
         return False
+
+
