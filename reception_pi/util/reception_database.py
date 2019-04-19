@@ -88,3 +88,19 @@ class ReceptionDatabase(object):
         row = self.__db_cursor.fetchone()
 
         return row
+
+    def get_user_id(self, user: str):
+        """
+        get id of a user (except password) by username or email address
+
+        Args:
+            user: Email Address or username of the user
+
+        Returns:
+            int: id of the user
+        """
+        self.__db_cursor.execute('''SELECT id, username, password FROM user WHERE (email = ? OR username = ?)''',
+                                 (user, user))
+        row = self.__db_cursor.fetchone()
+
+        return row[0]

@@ -49,6 +49,10 @@ class ReceptionApplication(object):
             valid_credentials = self.__verify_hash(password, hash_)
 
             if valid_credentials:
+                data_for_mp = {'action': 'login', 'user': user}
+                json_data_for_mp = json.dumps(data_for_mp)
+
+                # todo: send json message to MP
                 print("Logged in....waiting for the sockets to work!")
                 pass
             else:
@@ -63,6 +67,7 @@ class ReceptionApplication(object):
         """
         Registers a new user by taking in username, email address and password as input; performing input validation and
         checking for duplicate username or email address in database against already existing users.
+        And notifies MP about the new registration
         """
 
         validate_input = input_validation.InputValidation
@@ -111,6 +116,13 @@ class ReceptionApplication(object):
             self.__db_connection.insert_user(username, email, password_hash)
 
             print("\nRegistration successful...\n")
+
+            user_id = self.__db_connection.get_user_id(username)
+
+            data_for_mp = {'action': 'register', 'id': user_id, 'username': username, 'email': email}
+            json_data_for_mp = json.dumps(data_for_mp)
+
+            # todo: send registration info in json to mp
 
             registration_unsuccessful = False
 
