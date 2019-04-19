@@ -33,7 +33,11 @@ class InputValidation(object):
             boolean: a boolean specifying whether the username is valid or not
         """
 
-        is_valid = re.search("[0-9a-zA-Z\S]{5,}", username)
+        is_valid = re.search("\s+", username)
+        if is_valid:
+            return False
+
+        is_valid = re.search("[0-9a-zA-Z]{5,}", username)
 
         if is_valid:
             return True
@@ -54,11 +58,13 @@ class InputValidation(object):
             boolean: a boolean specifying whether the username is valid or not
         """
 
-        is_valid = re.search("[0-9a-zA-Z*#$@!%^\S]{6,}", password)
+        is_valid = re.search("\s+", password)
+        if is_valid:
+            return False
+
+        is_valid = re.search("[0-9a-zA-Z*#$@!%^]{6,}", password)
 
         if is_valid:
             return True
 
         return False
-
-
