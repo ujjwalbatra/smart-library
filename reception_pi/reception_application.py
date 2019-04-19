@@ -5,9 +5,9 @@ from sqlite3 import Error
 import logging
 from passlib.hash import pbkdf2_sha256
 
-from reception_pi.util import reception_database, input_validation
+from util import reception_database, input_validation
 
-logging.basicConfig(filename="/logs/reception-application.log", filemode='a', level=logging.DEBUG)
+logging.basicConfig(filename="./reception_pi/logs/reception-application.log", filemode='a', level=logging.DEBUG)
 
 
 class ReceptionApplication(object):
@@ -21,9 +21,9 @@ class ReceptionApplication(object):
 
         Returns: name of the database
         """
-        with open('config.json') as json_file:
+        with open('./reception_pi/config.json') as json_file:
             data = json.load(json_file)
-            return data['db_name']
+            return data['database']['test']
 
     def handle_login(self):
         """
@@ -34,13 +34,22 @@ class ReceptionApplication(object):
 
         # multiple login trials
         while try_login == 1:
-            username = input("\nUsername or Email Address: ")
+            user = input("\nUsername or Email Address: ")
             password = getpass.getpass(prompt='Password: ')
 
-            valid_credentials = False
-            # todo: confirm credentials from db
+            row = self.__db_connection.get_password_by_user(user)
+
+            if row is None:
+                print("\nUser Not Found! Please try again")
+                break
+
+            hash_ = row[0]
+
+            # check if hash is equal to the password
+            valid_credentials = self.__verify_hash(password, hash_)
+
             if valid_credentials:
-                # todo: send socket message to MP
+                print("Logged in....waiting for the sockets to work!")
                 pass
             else:
                 option_selected = input("\nInvalid username or password!"
@@ -48,7 +57,7 @@ class ReceptionApplication(object):
                 try:
                     try_login = int(option_selected)
                 except ValueError:
-                    try_login = 1
+                    try_login = 99
 
     def handle_register(self):
         """
@@ -58,7 +67,9 @@ class ReceptionApplication(object):
 
         validate_input = input_validation.InputValidation
 
-        while True:
+        registration_unsuccessful = True
+
+        while registration_unsuccessful:
             username = input("\nEnter Username (must be at-least 5 characters, no special characters allowed): ")
             username = username.strip()  # remove leading and trailing spaces
             username_is_valid = validate_input.validate_username(username)
@@ -73,7 +84,7 @@ class ReceptionApplication(object):
                 print("Username already exists. Try again.")
                 continue
 
-            email = input("\nEnter an Email Address: ")
+            email = input("Enter an Email Address: ")
             email = email.strip()  # remove leading and trailing spaces
             email_is_valid = validate_input.validate_email(email)
 
@@ -96,10 +107,12 @@ class ReceptionApplication(object):
                 print("Invalid password. Try again.")
                 continue
 
-            password_hash = self.__hash_password()
+            password_hash = self.__hash_password(password)
             self.__db_connection.insert_user(username, email, password_hash)
 
             print("\nRegistration successful...\n")
+
+            registration_unsuccessful = False
 
     def __hash_password(self, password):
         """
@@ -120,6 +133,25 @@ class ReceptionApplication(object):
         password_hash = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
 
         return password_hash
+
+    def __verify_hash(self, password, hash_):
+        """
+        Takes in string passwords and checks if it matches the hash
+
+        Acknowledgement: Copyright of https://www.cyberciti.biz/python-tutorials/securely-hash-passwords-in-python/
+        used for educational learning only
+
+        Args:
+            hash_: hash of the password to be matched against
+            password: readable string password of user
+
+        Returns:
+            boolean: True if hash matches the password, otherwise false
+        """
+
+        # rounds = amount of computations used... to slow down brute force on hack
+        # salt_size = length of salt in bytes
+        return pbkdf2_sha256.verify(password, hash_)
 
     def main(self):
         try:
@@ -146,11 +178,14 @@ class ReceptionApplication(object):
                     quit_reception_application = True
                 else:
                     print("\nInvalid Input! Try again.", end="\n")
-        except Error:
-            logging.warning(e.__str__() + " " + datetime.now().__str__())
+        except Error as e:
+            logging.warning("DB: " + e.__str__() + " " + datetime.now().__str__())
         finally:
             self.__db_connection.close_connection()
 
 
 if __name__ == '__main__':
-    ReceptionApplication().main()
+    try:
+        ReceptionApplication().main()
+    except Exception as e:
+        logging.warning("RECEPTION_PI: " + e.__str__() + " " + datetime.now().__str__())

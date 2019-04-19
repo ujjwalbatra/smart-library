@@ -17,7 +17,7 @@ class ReceptionDatabase(object):
         """
         Creates a new table user if it doesn't exist.
         """
-        self.__db_cursor.execute('''CREATE TABLE IF NOT EXISTS user (id INT PRIMARY KEY AUTOINCREMENT, 
+        self.__db_cursor.execute('''CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     username VARCHAR(255) UNIQUE, email VARCHAR(320) UNIQUE, password VARCHAR(255));''')
 
     def insert_user(self, username: str, email: str, password: str):
@@ -30,7 +30,7 @@ class ReceptionDatabase(object):
             password: Password of the user
         """
 
-        self.__db_cursor.execute('''INSERT INTO user(username, email, password) VALUE(%, %, %)''',
+        self.__db_cursor.execute('''INSERT INTO user(username, email, password) VALUES(?, ?, ?)''',
                                  (username, email, password))
         self.__db_conn.commit()
 
@@ -45,7 +45,7 @@ class ReceptionDatabase(object):
             boolean: True if the username already exist, otherwise false
 
         """
-        self.__db_cursor.execute('''SELECT * FROM user WHERE username = ?''', username)
+        self.__db_cursor.execute('''SELECT * FROM user WHERE username = ?''', (username,))
         row = self.__db_cursor.fetchall()
 
         if row:
@@ -64,7 +64,7 @@ class ReceptionDatabase(object):
             boolean: True if the username already exist, otherwise false
 
         """
-        self.__db_cursor.execute('''SELECT * FROM user WHERE email = ?''', email)
+        self.__db_cursor.execute('''SELECT * FROM user WHERE email = ?''', (email,))
         row = self.__db_cursor.fetchall()
 
         if row:
@@ -72,7 +72,7 @@ class ReceptionDatabase(object):
         else:
             return False
 
-    def authenticate_login(self, user: str, password: str):
+    def get_password_by_user(self, user: str):
         """
         Check login credentials of a user by matching user or email address with password.
 
@@ -83,11 +83,8 @@ class ReceptionDatabase(object):
         Returns:
             boolean: True if user and password matched, otherwise false
         """
-        self.__db_cursor.execute('''SELECT * FROM user WHERE (email = ? OR username = ?) AND password = ?''',
-                                 (user, user, password))
+        self.__db_cursor.execute('''SELECT password FROM user WHERE (email = ? OR username = ?)''',
+                                 (user, user))
         row = self.__db_cursor.fetchone()
 
-        if row:
-            return True
-        else:
-            return False
+        return row
