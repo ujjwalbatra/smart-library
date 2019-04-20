@@ -6,6 +6,12 @@ class ReceptionDatabase(object):
         self.__db_conn = sqlite3.connect(db_name)
         self.__db_cursor = self.__db_conn.cursor()
 
+    def __enter__(self):
+            return self
+
+    def __exit__(self, type, value, traceback):
+            self.close_connection()
+
     def close_connection(self):
         """
         Releases database resources by closing db cursor and connection.

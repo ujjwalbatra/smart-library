@@ -1,6 +1,8 @@
 # removing configs
 config.json
 
+#removiung db files
+*.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

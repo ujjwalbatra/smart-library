@@ -12,7 +12,7 @@ logging.basicConfig(filename="./reception_pi/logs/reception-application.log", fi
 
 class ReceptionApplication(object):
     def __init__(self):
-        self.__db_name = self.__get_database_filename()
+        self.__db_name = './reception_pi/' + self.__get_database_filename()
         self.__db_connection = reception_database.ReceptionDatabase(self.__db_name)
 
     def __get_database_filename(self):
@@ -20,6 +20,9 @@ class ReceptionApplication(object):
         Gets name of database form config.json
 
         Returns: name of the database
+
+        Returns:
+            string: name of th database
         """
         with open('./reception_pi/config.json') as json_file:
             data = json.load(json_file)
