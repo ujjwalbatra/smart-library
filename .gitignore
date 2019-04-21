@@ -1,5 +1,7 @@
 # removing configs
-config.json
+*.json
+
+token.pickle
 
 #removiung db files
 *.db
