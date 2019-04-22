@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlite3 import Error
 import logging
 from passlib.hash import pbkdf2_sha256
-
-from util import reception_database, input_validation
+from util import reception_database
+from util import input_validation
 
 logging.basicConfig(filename="./reception_pi/logs/reception-application.log", filemode='a', level=logging.DEBUG)
 
@@ -193,8 +193,9 @@ class ReceptionApplication(object):
                     quit_reception_application = True
                 else:
                     print("\nInvalid Input! Try again.", end="\n")
-        except Error as e:
-            logging.warning("DB: " + e.__str__() + " " + datetime.now().__str__())
+
+        except Error as error:
+            logging.warning("DB: " + error.__str__() + " " + datetime.now().__str__())
         finally:
             self.__db_connection.close_connection()
 
