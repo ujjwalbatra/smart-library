@@ -23,6 +23,7 @@ class GoogleCalendar(object):
         Authenticates user using Google oauth2.
         Google oauth2 Documentation: https://developers.google.com/identity/protocols/OAuth2
         """
+
         credentials = None
         if os.path.exists('token.pickle'):
             with open('token.pickle', 'rb') as token:
@@ -55,6 +56,7 @@ class GoogleCalendar(object):
             date: date of the event
             timezone:
         """
+
         summary = "username = {}\ntype = {}".format(username, type_)
         description = "type = {}\ntitle = {}".format(type_, book_title)
 
