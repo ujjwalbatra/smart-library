@@ -3,6 +3,7 @@ import MySQLdb
 from datetime import date
 
 
+# noinspection SqlDialectInspection
 class GcpDatabase:
 
     def __init__(self):
@@ -41,8 +42,9 @@ class GcpDatabase:
                                     username VARCHAR(255) UNIQUE, email VARCHAR(320) UNIQUE);''')
 
         self.__cursor.execute('''CREATE TABLE IF NOT EXISTS book (id INT PRIMARY KEY AUTO_INCREMENT, 
-                                    title VARCHAR(1000) UNIQUE, isbn VARCHAR(20), published_date DATE, author VARCHAR(1000), 
-                                    total_copies INT DEFAULT 1, copies_available INT DEFAULT 1);''')
+                                    title VARCHAR(1000) UNIQUE, isbn VARCHAR(20), published_date DATE, 
+                                    author VARCHAR(1000), total_copies INT DEFAULT 1, 
+                                    copies_available INT DEFAULT 1);''')
 
         self.__cursor.execute('''CREATE TABLE IF NOT EXISTS borrow_record (id INT PRIMARY KEY AUTO_INCREMENT, 
                                     user_id INT NOT NULL, book_id INT NOT NULL, status enum ('borrowed', 'returned'), 
@@ -137,8 +139,8 @@ class GcpDatabase:
         """
 
         title = "%" + title + "%"
-        self.__cursor.execute('''SELECT id, title, author,  published_date, copies_available FROM book WHERE title LIKE %s
-                                    ORDER BY title ASC''', (title,))
+        self.__cursor.execute('''SELECT id, title, author,  published_date, copies_available 
+                                    FROM book WHERE title LIKE %s ORDER BY title ASC''', (title,))
 
         row = self.__cursor.fetchall()
         return row
@@ -155,8 +157,8 @@ class GcpDatabase:
         """
 
         isbn = "%" + isbn + "%"
-        self.__cursor.execute('''SELECT id, title, author, published_date, copies_available FROM book WHERE isbn LIKE (%s) 
-                                    ORDER BY title ASC''', (isbn,))
+        self.__cursor.execute('''SELECT id, title, author, published_date, copies_available 
+                                    FROM book WHERE isbn LIKE (%s) ORDER BY title ASC''', (isbn,))
 
         row = self.__cursor.fetchall()
         return row
@@ -174,8 +176,8 @@ class GcpDatabase:
 
         author = "%" + author + "%"
 
-        self.__cursor.execute('''SELECT id, title, author, published_date, copies_available FROM book WHERE author LIKE %s
-                                    ORDER BY title ASC''', (author,))
+        self.__cursor.execute('''SELECT id, title, author, published_date, copies_available 
+                                    FROM book WHERE author LIKE %s ORDER BY title ASC''', (author,))
 
         row = self.__cursor.fetchall()
         return row

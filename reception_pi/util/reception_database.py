@@ -1,6 +1,7 @@
 import sqlite3
 
 
+# noinspection SqlDialectInspection
 class ReceptionDatabase(object):
     def __init__(self, db_name):
         self.__db_conn = sqlite3.connect(db_name)
@@ -9,7 +10,7 @@ class ReceptionDatabase(object):
     def __enter__(self):
             return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type_, value, traceback):
             self.close_connection()
 
     def close_connection(self):
