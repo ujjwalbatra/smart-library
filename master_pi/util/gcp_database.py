@@ -46,10 +46,71 @@ class GcpDatabase:
 
         self.__cursor.execute('''CREATE TABLE IF NOT EXISTS borrow_record (id INT PRIMARY KEY AUTO_INCREMENT, 
                                     user_id INT NOT NULL, book_id INT NOT NULL, status enum ('borrowed', 'returned'), 
-                                    issue_date DATE,
+                                    issue_date DATE DEFAULT CURRENT_DATE ,
                                     return_date DATE, actual_return_date DATE DEFAULT NULL,
                                     FOREIGN KEY (book_id) REFERENCES book(id),
                                     FOREIGN KEY (user_id) REFERENCES user(id));''')
+
+    def borrow_book(self, user_id: int, book_id: int, return_date: str):
+        """
+        adds a record for book being borrowed of a user
+
+        Args:
+            user_id: id of the user who is borrowing the book
+            book_id: id of the book being issued
+            return_date: expected return date
+        """
+
+        self.__cursor.execute('''INSERT INTO borrow_record (user_id, book_id, status, return_date) 
+                                    VALUES (%s, %s, %s, %s); ''', (user_id, book_id, "borrowed", return_date))
+
+        self.__connection.commit()
+
+    def get_num_available_copies(self, book_id: int):
+        """
+        returns number of copies available for a book
+        Args:
+            book_id: id of the book to check copies available for
+
+        Returns:
+            int: number of copies available
+
+        """
+
+        self.__cursor.execute('''SELECT copies_available FROM book WHERE id = %s''', (book_id,))
+
+        copies_available = self.__cursor.fetchone()
+        return copies_available[0]
+
+    def get_user_id_by_user(self, user: str):
+        """
+        returns user id by username or email address
+
+        Args:
+            user: Username or Email address of the user
+
+        Returns:
+            int: ID of the user
+
+        """
+        self.__cursor.execute('''SELECT id FROM user WHERE username = %s OR email = %s''',
+                              (user, user))
+
+        user_id = self.__cursor.fetchone()
+        return user_id[0]
+
+    def change_num_available_copies(self, book_id: int, copies_available: int):
+        """
+        update number of copies available for a book
+        Args:
+            book_id: id of the book to change number of copies for
+            copies_available: new number of copies available
+        """
+
+        self.__cursor.execute('''UPDATE book SET copies_available = %s WHERE book_id = %s''',
+                              (copies_available, book_id))
+
+        self.__connection.commit()
 
     def add_user(self, id_: int, username: str, email: str):
         """
@@ -74,7 +135,9 @@ class GcpDatabase:
         Returns:
             result_set : result set containing id, title, published_date, copies_available of the matched books
         """
-        self.__cursor.execute('''SELECT id, title, published_date, copies_available FROM book WHERE title LIKE %s
+
+        title = "%" + title + "%"
+        self.__cursor.execute('''SELECT id, title, author,  published_date, copies_available FROM book WHERE title LIKE %s
                                     ORDER BY title ASC''', (title,))
 
         row = self.__cursor.fetchall()
@@ -91,7 +154,9 @@ class GcpDatabase:
             result_set : result set containing id, title, published_date, copies_available of the matched books
         """
 
-        self.__cursor.execute('''SELECT id, title, published_date, copies_available FROM book WHERE isbn LIKE (%s)''', (isbn,))
+        isbn = "%" + isbn + "%"
+        self.__cursor.execute('''SELECT id, title, author, published_date, copies_available FROM book WHERE isbn LIKE (%s) 
+                                    ORDER BY title ASC''', (isbn,))
 
         row = self.__cursor.fetchall()
         return row
@@ -109,7 +174,7 @@ class GcpDatabase:
 
         author = "%" + author + "%"
 
-        self.__cursor.execute('''SELECT id, title, published_date, copies_available FROM book WHERE author LIKE %s
+        self.__cursor.execute('''SELECT id, title, author, published_date, copies_available FROM book WHERE author LIKE %s
                                     ORDER BY title ASC''', (author,))
 
         row = self.__cursor.fetchall()
@@ -128,6 +193,7 @@ class GcpDatabase:
         """
 
         self.__cursor.execute('''INSERT INTO book (title, isbn, published_date, author, total_copies, copies_available) 
-                                    VALUES ("abcdef", "123321123", '1994-09-09', "dkdkdkdk", 2, 2); ''')
+                                    VALUES (%s, %s, %s, %s, %s, %s); ''',
+                              (title, isbn, published_date, author, total_copies, total_copies))
 
         self.__connection.commit()

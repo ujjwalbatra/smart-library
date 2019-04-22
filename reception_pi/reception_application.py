@@ -176,8 +176,10 @@ class ReceptionApplication(object):
 
             # wait for a valid input from user
             while not quit_reception_application:
-                option_selected = input("\nPlease select one of the following option: "
-                                        "\n\t1. Login\n\t2. Register a new account\n\t3. Quit\n")
+                option_selected = input("\nPlease select one of the following option:\n"
+                                        "\t1. Login\n"
+                                        "\t2. Register a new account\n"
+                                        "\t3. Quit\n")
 
                 # if user input is not an integer then ask for input again
                 try:
