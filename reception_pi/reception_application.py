@@ -19,8 +19,7 @@ class ReceptionApplication(object):
         """
         Gets name of database form config.json
 
-        Returns: name of the database
-
+       
         Returns:
             string: name of th database
         """
