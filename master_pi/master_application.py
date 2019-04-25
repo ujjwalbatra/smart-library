@@ -1,5 +1,4 @@
 import datetime
-
 from util import google_calendar, gcp_database
 
 
@@ -31,7 +30,7 @@ class MasterApplication(object):
             num_title_matches = len(title_matches)
 
             # if title matches are 5 or more then return 5 title matches.
-            # Otherwise fill search result with ISBN and Author name matches, until 5 results/
+            # Otherwise fill search result with ISBN and Author name matches, until 5 results
             if num_title_matches < search_limit:
                 partial_matches = title_matches
 
@@ -75,15 +74,58 @@ class MasterApplication(object):
         Args:
             user: username or email address of the user
         """
-        pass
-    # todo: get the book id to borrow
-    # todo: get user id of the user
-    # todo: get copies available
-    # todo: check if copy left
-    # todo: if yes then call borrow book and update number of copies
-    # todo: else print unavailable
 
-    def __return_book(self):
+        user_id = self.__database.get_user_id_by_user(user)
+
+        try_again = True
+
+        # continue till user asks to stop
+        while try_again:
+            valid_input = False
+
+            while not valid_input:
+                book_id = input("\nEnter book id")
+
+                try:
+                    book_id = int(book_id.strip())
+                except ValueError:
+                    print("Invalid Input try again")
+                    continue
+                valid_input = True
+
+            available_copies = self.__database.get_num_available_copies(book_id)
+
+            # if book is not available, ask if user wants to try to borrow another book
+            if available_copies < 0:
+
+                user_input = input("Book not available. Press 1 to continue or "
+                                   "any other key to go to the previous menu.")
+                try:
+                    user_input = int(user_input.strip())
+                except ValueError:
+                    break
+
+                try_again = True if (user_input == 1) else False
+
+            else:
+                # get date of 7 days from now
+                return_date = datetime.date.today() + datetime.timedelta(days=7)
+                return_date = return_date.strftime("%Y-%M-%D").__str__()
+
+                self.__database.borrow_book(user_id, book_id, return_date)
+                self.__database.change_num_available_copies(book_id, available_copies - 1)
+
+                user_input = input("\nBook {} successfully borrowed. Press 1 to borrow "
+                                   "another book or any other key to go to the previous menu.".format(book_id))
+
+                try:
+                    user_input = int(user_input.strip())
+                except ValueError:
+                    break
+
+                try_again = True if (user_input == 1) else False
+
+    def __return_book(self, user: str):
         pass
 
     def main(self):

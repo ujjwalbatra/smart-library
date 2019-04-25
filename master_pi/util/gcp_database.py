@@ -71,6 +71,7 @@ class GcpDatabase:
     def get_num_available_copies(self, book_id: int):
         """
         returns number of copies available for a book
+
         Args:
             book_id: id of the book to check copies available for
 
@@ -104,6 +105,7 @@ class GcpDatabase:
     def change_num_available_copies(self, book_id: int, copies_available: int):
         """
         update number of copies available for a book
+
         Args:
             book_id: id of the book to change number of copies for
             copies_available: new number of copies available
