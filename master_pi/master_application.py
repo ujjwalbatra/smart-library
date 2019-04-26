@@ -1,11 +1,13 @@
 import datetime
-from util import google_calendar, gcp_database
+from util import google_calendar
+from util import gcp_database
 
 
 class MasterApplication(object):
 
     def __init__(self):
         self.__database = gcp_database.GcpDatabase()
+        self.__calendar = google_calendar.GoogleCalendar()
         self.__database.create_tables()
 
     def __search_book(self):
@@ -20,11 +22,11 @@ class MasterApplication(object):
         while search_again:
             search_query = input("\nEnter search query:")
 
-            if len(search_query) < 0:
+            if len(search_query) < 1:
                 print("\nPlease enter a valid input.")
                 continue
 
-            partial_matches = None  # to keep all title, isbn and author matches
+            partial_matches = []  # to keep all title, isbn and author matches
             title_matches = self.__database.search_book_by_title(search_query)
 
             num_title_matches = len(title_matches)
@@ -34,6 +36,15 @@ class MasterApplication(object):
             if num_title_matches < search_limit:
                 partial_matches = title_matches
 
+                if len(partial_matches) < search_limit:
+                    author_matches = self.__database.search_book_by_author(search_query)
+
+                    for i in author_matches:
+                        if len(partial_matches) < search_limit:
+                            partial_matches = partial_matches.extend(author_matches[i])
+                        else:
+                            break
+
                 isbn_matches = self.__database.search_book_by_isbn(search_query)
 
                 for i in isbn_matches:
@@ -42,12 +53,10 @@ class MasterApplication(object):
                     else:
                         break
 
-            if len(partial_matches) < search_limit:
-                author_matches = self.__database.search_book_by_author(search_query)
-
-                for i in author_matches:
+            else:
+                for i in title_matches:
                     if len(partial_matches) < search_limit:
-                        partial_matches = partial_matches.extend(author_matches[i])
+                        partial_matches = partial_matches.extend(title_matches[i])
                     else:
                         break
 
@@ -70,6 +79,7 @@ class MasterApplication(object):
     def __borrow_book(self, user: str):
         """
         Borrows a book for a user with expected return date as 1 week far from current date
+        and adds 2 calender events for issue date and expected return date with information of book and user
 
         Args:
             user: username or email address of the user
@@ -82,6 +92,7 @@ class MasterApplication(object):
         # continue till user asks to stop
         while try_again:
             valid_input = False
+            book_id = 0
 
             while not valid_input:
                 book_id = input("\nEnter book id")
@@ -112,11 +123,19 @@ class MasterApplication(object):
                 return_date = datetime.date.today() + datetime.timedelta(days=7)
                 return_date = return_date.strftime("%Y-%M-%D").__str__()
 
-                self.__database.borrow_book(user_id, book_id, return_date)
-                self.__database.change_num_available_copies(book_id, available_copies - 1)
+                borrow_id = self.__database.borrow_book(user_id, book_id, return_date)
+                self.__database.update_num_available_copies(book_id, available_copies - 1)
 
-                user_input = input("\nBook {} successfully borrowed. Press 1 to borrow "
-                                   "another book or any other key to go to the previous menu.".format(book_id))
+                todays_date = datetime.date.today().strftime("%Y-%M-%D").__str__()
+
+                # create issue and return date calendar events
+                self.__calendar.create_event(user, book_id, todays_date, "Australia/Melbourne")
+                self.__calendar.create_event(user, book_id, return_date, "Australia/Melbourne")
+
+                user_input = input("\nBook {} successfully borrowed. "
+                                   "And your borrow id is {} please use it while returning the book."
+                                   "Press 1 to borrow another book or any other key to go to the previous menu."
+                                   .format(book_id, borrow_id))
 
                 try:
                     user_input = int(user_input.strip())
@@ -126,7 +145,67 @@ class MasterApplication(object):
                 try_again = True if (user_input == 1) else False
 
     def __return_book(self, user: str):
-        pass
+        """
+        Returns the book for the user and make the book available for another issue
+        Args:
+            user: username or email address of the user
+        """
+
+        user_id = self.__database.get_user_id_by_user(user)
+
+        try_again = True
+
+        # continue till user asks to stop
+        while try_again:
+            valid_input = False
+            borrow_id = 0
+
+            while not valid_input:
+                borrow_id = input("\nEnter borrow id")
+
+                try:
+                    borrow_id = int(borrow_id.strip())
+                except ValueError:
+                    print("Invalid Input try again")
+                    continue
+                valid_input = True
+
+            book_id = self.__database.get_book_id_by_borrow_id(borrow_id)
+
+            book_borrowed = self.__database.confirm_borrow_status(borrow_id, user_id)
+
+            # if book is not borrowed or not borrowed by this user.. then report invalid to the user
+            if book_borrowed is False:
+                user_input = input("\nInvalid borrow id. Press 1 to try again or "
+                                   "anything else to go to the previous menu")
+
+                try:
+                    user_input = int(user_input.strip())
+                except ValueError:
+                    break
+
+                if user_input == 1:
+                    continue
+                else:
+                    break
+
+            available_copies = self.__database.get_num_available_copies(book_id)
+            self.__database.update_num_available_copies(book_id, available_copies + 1)
+
+            todays_date = datetime.date.today().strftime("%Y-%M-%D").__str__()
+
+            self.__database.return_book(borrow_id, todays_date)
+
+            user_input = input("\nBook {} successfully returned. "
+                               "Press 1 to return another book or any other key to go to the previous menu."
+                               .format(book_id, borrow_id))
+
+            try:
+                user_input = int(user_input.strip())
+            except ValueError:
+                break
+
+            try_again = True if (user_input == 1) else False
 
     def main(self):
         user = "coming from socket"
@@ -152,7 +231,7 @@ class MasterApplication(object):
                 self.__borrow_book(user)
                 option_selected = 5
             elif option_selected == 3:
-                self.__return_book()
+                self.__return_book(user)
                 option_selected = 5
             elif option_selected == 4:
                 pass  # TODO: logout messages sent using socket

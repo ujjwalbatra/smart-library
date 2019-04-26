@@ -45,20 +45,20 @@ class GoogleCalendar(object):
 
         return service
 
-    def create_event(self, username: str, book_title: str, type_: str, date: datetime.date, timezone: str):
+    def create_event(self, username: str, book_id: int, type_: str, date: datetime.date, timezone: str):
         """
         Creates a google calendar event.
 
         Args:
             username: username of the library account which event is concerned about
-            book_title: title of the book
+            book_id: id of the book
             type_: can be either book_issued or book_return_date
             date: date of the event
             timezone:
         """
 
         summary = "username = {}\ntype = {}".format(username, type_)
-        description = "type = {}\ntitle = {}".format(type_, book_title)
+        description = "type = {}\ntitle = {}".format(type_, book_id)
 
         event = {
             'summary': summary,

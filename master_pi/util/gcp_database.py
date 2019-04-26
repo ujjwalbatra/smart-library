@@ -55,18 +55,74 @@ class GcpDatabase:
 
     def borrow_book(self, user_id: int, book_id: int, return_date: str):
         """
-        adds a record for book being borrowed of a user
+        Adds a record for book being borrowed of a user
 
         Args:
             user_id: id of the user who is borrowing the book
             book_id: id of the book being issued
             return_date: expected return date
+
+        Returns:
+            int: id of the row inserted
         """
 
         self.__cursor.execute('''INSERT INTO borrow_record (user_id, book_id, status, return_date) 
-                                    VALUES (%s, %s, %s, %s); ''', (user_id, book_id, "borrowed", return_date))
+                                    VALUES (%s, %s, %s, %s); ''', (user_id, book_id, 'borrowed', return_date))
 
         self.__connection.commit()
+
+        return self.__cursor.lastrowid
+
+    def confirm_borrow_status(self, borrow_id: int, user_id: int):
+        """
+        Checks if the borrow id exists
+
+        Args:
+            user_id: user id of the user who borrowed the book
+            borrow_id: id of the borrow record to be matched
+
+        Returns:
+            boolean: True if the borrow id exists and the book is not returned
+        """
+
+        self.__cursor.execute('''SELECT * FROM borrow_record WHERE id = %s AND status = %s AND user_id = %s''',
+                              (borrow_id, "borrowed", user_id))
+
+        row = self.__cursor.fetchone()
+
+        return True if row is not None else False
+
+    def return_book(self, borrow_id: int, actual_return_date: str):
+        """
+        Returns the book and adds actual return date
+
+        Args:
+            actual_return_date: actual return date of the book
+            borrow_id: id of the borrow record to be returned
+        """
+
+        self.__cursor.execute('''UPDATE borrow_record SET status = %s, actual_return_date = %s 
+                                    WHERE borrow_id = %s''', ("returned", actual_return_date, borrow_id))
+
+        self.__cursor.execute()
+
+    def get_book_id_by_borrow_id (self, borrow_id: int):
+        """
+        Get book id of the borrow record
+
+        Args:
+            borrow_id: id of the borrow record to be matched
+
+        Returns:
+            int: book id of the book borrowed
+        """
+
+        self.__cursor.execute('''SELECT book_id FROM borrow_record WHERE id = %s''',
+                              (borrow_id,))
+
+        row = self.__cursor.fetchone()
+
+        return row[0]
 
     def get_num_available_copies(self, book_id: int):
         """
@@ -102,7 +158,7 @@ class GcpDatabase:
         user_id = self.__cursor.fetchone()
         return user_id[0]
 
-    def change_num_available_copies(self, book_id: int, copies_available: int):
+    def update_num_available_copies(self, book_id: int, copies_available: int):
         """
         update number of copies available for a book
 
