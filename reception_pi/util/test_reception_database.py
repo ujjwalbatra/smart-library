@@ -9,6 +9,7 @@ class TestReceptionDatabase(unittest.TestCase):
         with open('./reception_pi/config.json') as json_file:
             data = json.load(json_file)
             database_name = data['database']['test']
+            database_name = './reception_pi/' + database_name
 
         self.database = reception_database.ReceptionDatabase(database_name)
         self.connection = self.database.get_connection()
