@@ -17,7 +17,7 @@ class MasterApplication(object):
         """
 
         search_limit = 5  # will return these many results only
-        search_again = False
+        search_again = True
 
         while search_again:
             search_query = input("\nEnter search query:")
@@ -56,7 +56,7 @@ class MasterApplication(object):
             else:
                 for i in title_matches:
                     if len(partial_matches) < search_limit:
-                        partial_matches = partial_matches.extend(title_matches[i])
+                        partial_matches.extend(title_matches[i])
                     else:
                         break
 
@@ -219,7 +219,7 @@ class MasterApplication(object):
                                "\t1. Search a book\n"
                                "\t2. Borrow a book\n"
                                "\t3. Return a book\n"
-                               "\t4. Logout")
+                               "\t4. Logout\n\n")
             try:
                 option_selected = int(user_input)
             except ValueError:
