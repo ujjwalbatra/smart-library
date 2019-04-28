@@ -25,7 +25,7 @@ class ReceptionApplication(object):
         """
         with open('./reception_pi/config.json') as json_file:
             data = json.load(json_file)
-            return data['database']['test']
+            return data['database']['production']
 
     def handle_login(self):
         """

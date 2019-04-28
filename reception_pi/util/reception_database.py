@@ -8,15 +8,16 @@ class ReceptionDatabase(object):
         self.__db_cursor = self.__db_conn.cursor()
 
     def __enter__(self):
-            return self
+        return self
 
     def __exit__(self, type_, value, traceback):
-            self.close_connection()
+        self.close_connection()
 
     def close_connection(self):
         """
         Releases database resources by closing db cursor and connection.
         """
+
         self.__db_cursor.close()
         self.__db_conn.close()
 
@@ -24,6 +25,7 @@ class ReceptionDatabase(object):
         """
         Creates a new table user if it doesn't exist.
         """
+
         self.__db_cursor.execute('''CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     username VARCHAR(255) UNIQUE, email VARCHAR(320) UNIQUE, password VARCHAR(255));''')
 
@@ -52,6 +54,7 @@ class ReceptionDatabase(object):
             boolean: True if the username already exist, otherwise false
 
         """
+
         self.__db_cursor.execute('''SELECT * FROM user WHERE username = ?''', (username,))
         row = self.__db_cursor.fetchall()
 
@@ -71,6 +74,7 @@ class ReceptionDatabase(object):
             boolean: True if the username already exist, otherwise false
 
         """
+
         self.__db_cursor.execute('''SELECT * FROM user WHERE email = ?''', (email,))
         row = self.__db_cursor.fetchall()
 
@@ -81,15 +85,15 @@ class ReceptionDatabase(object):
 
     def get_password_by_user(self, user: str):
         """
-        Check login credentials of a user by matching user or email address with password.
+        gets password of the user from database
 
         Args:
             user: Email Address or username of the user
-            password: Password of the user
 
         Returns:
             boolean: True if user and password matched, otherwise false
         """
+
         self.__db_cursor.execute('''SELECT password FROM user WHERE (email = ? OR username = ?)''',
                                  (user, user))
         row = self.__db_cursor.fetchone()
@@ -106,6 +110,7 @@ class ReceptionDatabase(object):
         Returns:
             int: id of the user
         """
+
         self.__db_cursor.execute('''SELECT id, username, password FROM user WHERE (email = ? OR username = ?)''',
                                  (user, user))
         row = self.__db_cursor.fetchone()
