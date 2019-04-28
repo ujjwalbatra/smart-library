@@ -53,7 +53,7 @@ class GcpDatabase:
                                     FOREIGN KEY (book_id) REFERENCES book(id),
                                     FOREIGN KEY (user_id) REFERENCES user(id));''')
 
-        def borrow_book(self, user_id: int, book_id: int,issue_date:str, return_date: str):
+    def borrow_book(self, user_id: int, book_id: int,issue_date:str, return_date: str):
         """
         Adds a record for book being borrowed of a user
 
@@ -68,7 +68,7 @@ class GcpDatabase:
 
         self.__cursor.execute('''INSERT INTO borrow_record (user_id, book_id, status,issue_date, return_date) 
                                     VALUES (%s, %s, %s, %s, %s);''', 
-                                    (user_id,i book_id, 'borrowed',issue_date, return_date))
+                                    (user_id, book_id, 'borrowed',issue_date, return_date))
 
         self.__connection.commit()
 
