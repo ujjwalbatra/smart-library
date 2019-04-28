@@ -48,12 +48,12 @@ class GcpDatabase:
 
         self.__cursor.execute('''CREATE TABLE IF NOT EXISTS borrow_record (id INT PRIMARY KEY AUTO_INCREMENT, 
                                     user_id INT NOT NULL, book_id INT NOT NULL, status enum ('borrowed', 'returned'), 
-                                    issue_date DATE DEFAULT CURRENT_DATE ,
+                                    issue_date DATE NOT NULL,
                                     return_date DATE, actual_return_date DATE DEFAULT NULL,
                                     FOREIGN KEY (book_id) REFERENCES book(id),
                                     FOREIGN KEY (user_id) REFERENCES user(id));''')
 
-    def borrow_book(self, user_id: int, book_id: int, return_date: str):
+        def borrow_book(self, user_id: int, book_id: int,issue_date:str, return_date: str):
         """
         Adds a record for book being borrowed of a user
 
@@ -66,8 +66,9 @@ class GcpDatabase:
             int: id of the row inserted
         """
 
-        self.__cursor.execute('''INSERT INTO borrow_record (user_id, book_id, status, return_date) 
-                                    VALUES (%s, %s, %s, %s); ''', (user_id, book_id, 'borrowed', return_date))
+        self.__cursor.execute('''INSERT INTO borrow_record (user_id, book_id, status,issue_date, return_date) 
+                                    VALUES (%s, %s, %s, %s, %s);''', 
+                                    (user_id,i book_id, 'borrowed',issue_date, return_date))
 
         self.__connection.commit()
 

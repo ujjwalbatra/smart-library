@@ -120,10 +120,11 @@ class MasterApplication(object):
 
             else:
                 # get date of 7 days from now
+                issue_date = datetime.date.today().strftime("%Y-%M-%D").__str__()
                 return_date = datetime.date.today() + datetime.timedelta(days=7)
                 return_date = return_date.strftime("%Y-%M-%D").__str__()
 
-                borrow_id = self.__database.borrow_book(user_id, book_id, return_date)
+                borrow_id = self.__database.borrow_book(user_id, book_id, issue_date, return_date)
                 self.__database.update_num_available_copies(book_id, available_copies - 1)
 
                 todays_date = datetime.date.today().strftime("%Y-%M-%D").__str__()

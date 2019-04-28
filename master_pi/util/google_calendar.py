@@ -25,8 +25,8 @@ class GoogleCalendar(object):
         """
 
         credentials = None
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
+        if os.path.exists('./master_pi/token.pickle'):
+            with open('./master_pi/token.pickle', 'rb') as token:
                 credentials = pickle.load(token)
 
         # If there are no (valid) credentials available, let the user log in.
@@ -38,7 +38,7 @@ class GoogleCalendar(object):
                     './master_pi/credentials.json', self.SCOPES)
                 credentials = flow.run_local_server()
             # Save the credentials for the next run
-            with open('token.pickle', 'wb') as token:
+            with open('./master_pi/token.pickle', 'wb') as token:
                 pickle.dump(credentials, token)
 
         service = build('calendar', 'v3', credentials=credentials)
