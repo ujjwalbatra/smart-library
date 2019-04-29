@@ -28,7 +28,7 @@ class TestInputValidation(unittest.TestCase):
         output = validate_input.validate_email(email)
         self.assertEqual(output, False)
 
-    def test_username(self):
+    def test_validate_username(self):
         validate_input = input_validation.InputValidation
 
         # testing right format
@@ -51,7 +51,7 @@ class TestInputValidation(unittest.TestCase):
         output = validate_input.validate_username(username)
         self.assertEqual(output, False)
 
-    def test_password(self):
+    def test_validate_password(self):
         validate_input = input_validation.InputValidation
 
         # testing right format
