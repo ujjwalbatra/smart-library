@@ -1,6 +1,9 @@
 # removing configs
 config.json
 
+credentials.json
+token.pickle
+*.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
