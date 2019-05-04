@@ -6,6 +6,7 @@ import logging
 from passlib.hash import pbkdf2_sha256
 from util import reception_database
 from util import input_validation
+from util import socket_utility
 
 logging.basicConfig(filename="./reception_pi/logs/reception-application.log", filemode='a', level=logging.DEBUG)
 
@@ -14,6 +15,7 @@ class ReceptionApplication(object):
     def __init__(self):
         self.__db_name = './reception_pi/' + self.__get_database_filename()
         self.__db_connection = reception_database.ReceptionDatabase(self.__db_name)
+        self.__socket_connection = socket_utility.SocketConnection()
 
     def __get_database_filename(self):
         """
@@ -51,12 +53,13 @@ class ReceptionApplication(object):
             valid_credentials = self.__verify_hash(password, hash_)
 
             if valid_credentials:
+                print("Logging in to master...")
+                try_login = 0
+
                 data_for_mp = {'action': 'login', 'user': user}
                 json_data_for_mp = json.dumps(data_for_mp)
 
-                # todo: send json message to MP
-                print("Logged in....waiting for the sockets to work!")
-                pass
+                self.__socket_connection.send_message_and_wait(json_data_for_mp)
             else:
                 option_selected = input("\nInvalid username or password!"
                                         "\nEnter 1 to try again or any other key to go back to the previous menu\n")
@@ -124,7 +127,7 @@ class ReceptionApplication(object):
             data_for_mp = {'action': 'register', 'id': user_id, 'username': username, 'email': email}
             json_data_for_mp = json.dumps(data_for_mp)
 
-            # todo: send registration info in json to mp
+            self.__socket_connection.send_message(json_data_for_mp)
 
             registration_unsuccessful = False
 
