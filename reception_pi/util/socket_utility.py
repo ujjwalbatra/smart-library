@@ -10,12 +10,31 @@ class SocketConnection():
         self.__socket_connection = None
 
     def send_message(self, message):
-        self.__connect_to_master()
+
+        """
+        Sends a string to the host then closes the connection
+
+        Args:
+            message: string to send to host
+        """
+
+        self.__connect_to_host()
         self.__send_string(message)
         self.close()
 
     def send_message_and_wait(self, message):
-        self.__connect_to_master()
+
+        """
+        Sends a string to the host then waits for a response
+
+        Args:
+            message: string to send to host
+
+        Returns:
+            string: response from host
+        """
+
+        self.__connect_to_host()
         self.__send_string(message)
         response = self.__wait_for_response()
         self.close()
@@ -23,6 +42,11 @@ class SocketConnection():
         return response
 
     def close(self):
+
+        """
+        Releases the socket
+        """
+
         self.__socket_connection.close()
         self.__socket_connection = None
 
@@ -32,7 +56,7 @@ class SocketConnection():
             self.__host = config_json["sockets"]['master_ip']
             self.__port = int(config_json["sockets"]['master_port'])
 
-    def __connect_to_master(self):
+    def __connect_to_host(self):
         if not self.__socket_connection:
             address = (self.__host, self.__port)
             self.__socket_connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
