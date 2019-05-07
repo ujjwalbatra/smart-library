@@ -211,20 +211,7 @@ class MasterApplication(object):
 
             try_again = True if (user_input == 1) else False
 
-    def __wait_for_client(self):
-        message = self.__socket.get_client_message()
-        action_json = json.loads(message)
-        action = action_json["action"]
-
-        if action == "register":
-            #register user
-            pass
-        elif action == "login":
-            #login user
-            pass
-
-    def main(self):
-        user = "coming from socket"
+    def __show_login_menu(self, user):
         # self.__database.add_book("abcdef", "123321123", date_today, "dkdkdkdk", 2)
 
         print("Welcome! {}".format(user))
@@ -250,10 +237,24 @@ class MasterApplication(object):
                 self.__return_book(user)
                 option_selected = 5
             elif option_selected == 4:
-                pass  # TODO: logout messages sent using socket
+                print("Logging out...")
+                break
             elif option_selected == 5:
                 print("\nWrong Input! Try Again...")
 
+    def main(self):
+        while True:
+            print("Waiting for client...")
+            action_string = self.__socket.wait_for_message()
+            action_json = json.loads(action_string)
+            action_type = action_json["action"]
+
+            if action_type == "register":
+                # TODO: Register user
+                pass
+            elif action_type == "login":
+                self.__show_login_menu(action_json["user"])
+                self.__socket.send_message("logout")
 
 if __name__ == '__main__':
     master_application = MasterApplication()
