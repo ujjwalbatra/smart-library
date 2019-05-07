@@ -16,11 +16,19 @@ class SocketClient():
 
         Args:
             message: string to send to host
+
+        Returns:
+            string: 'SUCCESS' or 'FAILURE' depending on whether message was sent successfully
         """
 
-        self.__connect_to_host()
-        self.__send_string(message)
-        self.close()
+        try:
+            self.__connect_to_host()
+            self.__send_string(message)
+            self.close()
+            return "SUCCESS"
+
+        except socket.error:
+            return "FAILURE"
 
     def send_message_and_wait(self, message):
 
@@ -31,15 +39,19 @@ class SocketClient():
             message: string to send to host
 
         Returns:
-            string: response from host
+            string: response from host, or 'FAILURE' if connection failed
         """
 
-        self.__connect_to_host()
-        self.__send_string(message)
-        response = self.__wait_for_response()
-        self.close()
+        try:
+            self.__connect_to_host()
+            self.__send_string(message)
+            response = self.__wait_for_response()
+            self.close()
 
-        return response
+            return response
+
+        except socket.error:
+            return "FAILURE"
 
     def close(self):
 
@@ -66,5 +78,5 @@ class SocketClient():
         self.__socket_connection.sendall(string.encode())
 
     def __wait_for_response(self):
-        response = self.__socket_connection.recv(4096)
+        response = self.__socket_connection.recv(4096).decode()
         return response

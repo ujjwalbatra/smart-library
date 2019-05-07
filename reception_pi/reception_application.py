@@ -54,12 +54,19 @@ class ReceptionApplication(object):
 
             if valid_credentials:
                 print("Logging in to master...")
-                try_login = 0
 
                 data_for_mp = {'action': 'login', 'user': user}
                 json_data_for_mp = json.dumps(data_for_mp)
 
-                self.__socket_client.send_message_and_wait(json_data_for_mp)
+                status = self.__socket_client.send_message_and_wait(json_data_for_mp)
+                print(status)
+
+                if status == "logout":
+                    try_login = 0
+                    print("Logged out by master")
+                elif status == "FAILURE":
+                    print("Failed to connect to master")
+
             else:
                 option_selected = input("\nInvalid username or password!"
                                         "\nEnter 1 to try again or any other key to go back to the previous menu\n")
@@ -120,14 +127,19 @@ class ReceptionApplication(object):
             password_hash = self.__hash_password(password)
             self.__db_connection.insert_user(username, email, password_hash)
 
-            print("\nRegistration successful...\n")
+            print("\nRegistering user...")
 
             user_id = self.__db_connection.get_user_id(username)
 
             data_for_mp = {'action': 'register', 'id': user_id, 'username': username, 'email': email}
             json_data_for_mp = json.dumps(data_for_mp)
 
-            self.__socket_client.send_message(json_data_for_mp)
+            status = self.__socket_client.send_message(json_data_for_mp)
+
+            if status == "SUCCESS":
+                print("Registration successful\n")
+            elif status == "FAILURE":
+                print("Failed to connect to master\n")
 
             registration_unsuccessful = False
 
