@@ -1,6 +1,8 @@
 import datetime
+import json
 from util import google_calendar
 from util import gcp_database
+from util import socket_host
 
 
 class MasterApplication(object):
@@ -9,6 +11,7 @@ class MasterApplication(object):
         self.__database = gcp_database.GcpDatabase()
         self.__calendar = google_calendar.GoogleCalendar()
         self.__database.create_tables()
+        self.__socket = socket_host.SocketHost()
 
     def __search_book(self):
         """
@@ -207,6 +210,18 @@ class MasterApplication(object):
                 break
 
             try_again = True if (user_input == 1) else False
+
+    def __wait_for_client(self):
+        message = self.__socket.get_client_message()
+        action_json = json.loads(message)
+        action = action_json["action"]
+
+        if action == "register":
+            #register user
+            pass
+        elif action == "login":
+            #login user
+            pass
 
     def main(self):
         user = "coming from socket"
