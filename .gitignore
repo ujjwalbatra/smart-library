@@ -6,7 +6,6 @@ token.pickle
 #removiung db files
 *.db
 
-vendor/
 *node_modeules/
 # Byte-compiled / optimized / DLL files
 __pycache__/
