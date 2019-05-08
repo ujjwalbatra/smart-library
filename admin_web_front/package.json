@@ -1,6 +1,6 @@
 {
     "title": "SB Admin 2",
-    "name": "startbootstrap-sb-admin-2",
+    "name": "admin_web_app",
     "version": "4.0.3",
     "scripts": {
         "start": "gulp watch"
