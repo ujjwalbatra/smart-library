@@ -11,7 +11,6 @@ class SocketHost():
         self.__start_listening()
 
     def wait_for_message(self):
-
         """
         Waits for a client to connect and send data
 
@@ -25,7 +24,6 @@ class SocketHost():
         return message
 
     def send_message(self, message):
-
         """
         Sends a string to the client
 
@@ -36,7 +34,6 @@ class SocketHost():
         self.__socket_connection.sendall(message.encode())
 
     def close(self):
-
         """
         Releases the socket and stops the server listening for connections
         """

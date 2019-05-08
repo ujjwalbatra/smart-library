@@ -1,5 +1,10 @@
 import json
 import socket
+import logging
+from datetime import datetime
+
+
+logging.basicConfig(filename="./reception_pi/logs/reception-application.log", filemode='a', level=logging.DEBUG)
 
 
 class SocketClient():
@@ -27,7 +32,8 @@ class SocketClient():
             self.close()
             return "SUCCESS"
 
-        except socket.error:
+        except socket.error as error:
+            logging.warning("DB: " + error.__str__() + " " + datetime.now().__str__())
             return "FAILURE"
 
     def send_message_and_wait(self, message):

@@ -250,11 +250,16 @@ class MasterApplication(object):
             action_type = action_json["action"]
 
             if action_type == "register":
-                # TODO: Register user
-                pass
+                user_id = action_json["id"]
+                username = action_json["username"]
+                email = action_json["email"]
+
+                self.__database.add_user(user_id, username, email)
+
             elif action_type == "login":
                 self.__show_login_menu(action_json["user"])
                 self.__socket.send_message("logout")
+
 
 if __name__ == '__main__':
     master_application = MasterApplication()
