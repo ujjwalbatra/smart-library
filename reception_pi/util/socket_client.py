@@ -33,7 +33,7 @@ class SocketClient():
             return "SUCCESS"
 
         except socket.error as error:
-            logging.warning("DB: " + error.__str__() + " " + datetime.now().__str__())
+            logging.warning("SOCKETS: " + error.__str__() + " " + datetime.now().__str__())
             return "FAILURE"
 
     def send_message_and_wait(self, message):
