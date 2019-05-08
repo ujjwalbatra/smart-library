@@ -241,17 +241,34 @@
                                 <div class="col-lg-8 offset-2">
                                     <div class="p-5">
                                         <div class="text-center">
+                                            <h1 class="h4 text-gray-900 mb-4">Add a book to the Smart Library!</h1>
                                         </div>
                                         <form class="user">
-                                            &nbsp;
-                                            <p>Title: Harry Potter</p>
-                                            <p>ISBN: YUO-6735633434343</p>
-                                            <p>Publish Date: 09 July 2000</p>
-                                            <p>Author: Jin Zeng</p>
-                                            <p>Total Copies: 2344</p>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                       id="title" aria-describedby="title"
+                                                       placeholder="Title">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control form-control-user"
+                                                       id="isbn" placeholder="ISBN">
+                                            </div>
+                                            <div class="card-columns" style="  display: flex;flex-flow: row wrap;align-items: center;">
+                                                <div class="form-group col-8" style="padding-left: 0">
+                                                    <input type="text" class="form-control form-control-user"
+                                                           id="publishedDate" onfocus="(this.type='date')"
+                                                           placeholder="Published Date">
+                                                </div>
 
-                                            <a href="list-of-book.html" class="btn btn-primary btn-user btn-block">
-                                                Remove
+                                                <div class="form-group col-4" style="padding-right: 0">
+                                                    <input type="number" class="form-control form-control-user"
+                                                           id="totalCopies" placeholder="Total Copies">
+                                                </div>
+                                            </div>
+
+                                            <a href="index.html" class="btn btn-primary btn-user btn-block"
+                                               style="margin: auto; width: 200px; margin-top: 20px">
+                                                Add
                                             </a>
                                             <hr>
 
