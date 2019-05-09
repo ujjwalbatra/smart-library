@@ -44,7 +44,7 @@ class MasterApplication(object):
 
                     for i in author_matches:
                         if len(partial_matches) < search_limit:
-                            partial_matches = partial_matches.extend(author_matches[i])
+                            partial_matches = partial_matches.extend(i)
                         else:
                             break
 
@@ -52,22 +52,23 @@ class MasterApplication(object):
 
                 for i in isbn_matches:
                     if len(partial_matches) < search_limit:
-                        partial_matches = partial_matches.extend(isbn_matches[i])
+                        partial_matches = partial_matches.extend(i)
                     else:
                         break
 
             else:
                 for i in title_matches:
                     if len(partial_matches) < search_limit:
-                        partial_matches.extend(title_matches[i])
+                        partial_matches.extend(i)
                     else:
                         break
-
+            print(partial_matches)
             # print all the matches on the console
             for match in partial_matches:
-                print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
-                      .format(match[0], match[1], match[2], match[3], match[4])
-                      )
+                print(match)
+                #print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
+                #      .format(match[0], match[1], match[2], match[3], match[4])
+                #      )
 
             # ask user if want to search again...and repeat again if user presses 1
             user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu.")
@@ -212,7 +213,7 @@ class MasterApplication(object):
             try_again = True if (user_input == 1) else False
 
     def __show_login_menu(self, user):
-        # self.__database.add_book("abcdef", "123321123", date_today, "dkdkdkdk", 2)
+        # self.__database.add_book("abcdef", "123321123", datetime.datetime.date.today(), "dkdkdkdk", 2)
 
         print("Welcome! {}".format(user))
         option_selected = 5
