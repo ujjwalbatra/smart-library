@@ -183,7 +183,7 @@ class GcpDatabase:
             email: email address of the user, same as on RP
         """
 
-        self.__cursor.execute('''INSERT INTO user VALUES(?, ?, ?);''', (id_, username, email))
+        self.__cursor.execute('''INSERT INTO user VALUES(%s, %s, %s);''', (id_, username, email))
         self.__connection.commit()
 
     def search_book_by_title(self, title: str):
