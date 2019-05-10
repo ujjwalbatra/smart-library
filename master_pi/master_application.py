@@ -23,7 +23,7 @@ class MasterApplication(object):
         search_again = True
 
         while search_again:
-            search_query = input("\nEnter search query:")
+            search_query = input("\nEnter search query:\t")
 
             if len(search_query) < 1:
                 print("\nPlease enter a valid input.")
@@ -42,11 +42,9 @@ class MasterApplication(object):
                 if len(partial_matches) <= search_limit:
 
                     author_matches = self.__database.search_book_by_author(search_query)
-                    print("author matches = ")
-                    print(author_matches)
 
                     for i in range(0, 5):
-                        if len(partial_matches) <= search_limit:
+                        if 0 < len(partial_matches) <= search_limit:
                             partial_matches.append(author_matches[i])
                         else:
                             break
@@ -54,27 +52,28 @@ class MasterApplication(object):
                 isbn_matches = self.__database.search_book_by_isbn(search_query)
 
                 for i in range(0, 5):
-                    if len(partial_matches) <= search_limit:
+                    if 0 < len(partial_matches) <= search_limit:
                         partial_matches.append(isbn_matches[i])
                     else:
                         break
 
             else:
                 for i in range(0, 5):
-                    if len(partial_matches) <= search_limit:
+                    if 0 < len(partial_matches) <= search_limit:
                         partial_matches.append(title_matches[i])
                     else:
                         break
 
             # print all the matches on the console
+            print("\n\nMATCHED RESULTS: ")
             for i in range(1, 6):
-                print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
+                print("\n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
                       .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
                               partial_matches[i][3], partial_matches[i][4])
                       )
 
             # ask user if want to search again...and repeat again if user presses 1
-            user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu.")
+            user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu:\t")
 
             try:
                 user_input = int(user_input)
