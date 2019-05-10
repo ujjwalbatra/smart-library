@@ -23,13 +23,13 @@ class MasterApplication(object):
         search_again = True
 
         while search_again:
-            search_query = input("\nEnter search query:")
+            search_query = input("\nEnter search query:\t")
 
             if len(search_query) < 1:
                 print("\nPlease enter a valid input.")
                 continue
 
-            partial_matches = []  # to keep all title, isbn and author matches
+            partial_matches = [[]]  # to keep all title, isbn and author matches
             title_matches = self.__database.search_book_by_title(search_query)
 
             num_title_matches = len(title_matches)
@@ -37,41 +37,48 @@ class MasterApplication(object):
             # if title matches are 5 or more then return 5 title matches.
             # Otherwise fill search result with ISBN and Author name matches, until 5 results
             if num_title_matches < search_limit:
-                partial_matches = title_matches
+                partial_matches = title_matches if len(title_matches) is not 0 else [[]]
 
-                if len(partial_matches) < search_limit:
+                if len(partial_matches) <= search_limit:
+
                     author_matches = self.__database.search_book_by_author(search_query)
 
-                    for i in author_matches:
-                        if len(partial_matches) < search_limit:
-                            partial_matches = partial_matches.extend(i)
+
+                    for i in range(0, 5):
+                        if 0 < len(partial_matches) <= search_limit:
+                            partial_matches.append(author_matches[i])
                         else:
                             break
 
                 isbn_matches = self.__database.search_book_by_isbn(search_query)
 
-                for i in isbn_matches:
-                    if len(partial_matches) < search_limit:
-                        partial_matches = partial_matches.extend(i)
+                for i in range(0, 5):
+                    if 0 < len(partial_matches) <= search_limit:
+                        partial_matches.append(isbn_matches[i])
                     else:
                         break
 
             else:
-                for i in title_matches:
-                    if len(partial_matches) < search_limit:
-                        partial_matches.extend(i)
+                for i in range(0, 5):
+                    if 0 < len(partial_matches) <= search_limit:
+                        partial_matches.append(title_matches[i])
                     else:
                         break
-            print(partial_matches)
+
+            if len(partial_matches > 0):
+                print("\n\nMATCHED RESULTS: ")
+            else:
+                print("\n\nNo Matches found\n\n")
+
             # print all the matches on the console
-            for match in partial_matches:
-                print(match)
-                #print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
-                #      .format(match[0], match[1], match[2], match[3], match[4])
-                #      )
+            for i in range(1, 6):
+                print("\n\tID: {}  TITLE: {}  AUTHOR: {} ISBN: {} PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
+                      .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
+                              partial_matches[i][3], partial_matches[i][4], partial_matches[i][5])
+                      )
 
             # ask user if want to search again...and repeat again if user presses 1
-            user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu.")
+            user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu:\t")
 
             try:
                 user_input = int(user_input)
@@ -124,23 +131,21 @@ class MasterApplication(object):
 
             else:
                 # get date of 7 days from now
-                issue_date = datetime.date.today().strftime("%Y-%M-%D").__str__()
+                issue_date = datetime.date.today().__str__()
                 return_date = datetime.date.today() + datetime.timedelta(days=7)
-                return_date = return_date.strftime("%Y-%M-%D").__str__()
+                return_date = return_date.__str__()
 
-                borrow_id = self.__database.borrow_book(user_id, book_id, issue_date, return_date)
+                self.__database.borrow_book(user_id, book_id, issue_date, return_date)
                 self.__database.update_num_available_copies(book_id, available_copies - 1)
 
-                todays_date = datetime.date.today().strftime("%Y-%M-%D").__str__()
+                todays_date = datetime.date.today().__str__()
 
                 # create issue and return date calendar events
                 self.__calendar.create_event(user, book_id, todays_date, "Australia/Melbourne")
                 self.__calendar.create_event(user, book_id, return_date, "Australia/Melbourne")
 
                 user_input = input("\nBook {} successfully borrowed. "
-                                   "And your borrow id is {} please use it while returning the book."
-                                   "Press 1 to borrow another book or any other key to go to the previous menu."
-                                   .format(book_id, borrow_id))
+                                   "\nPress 1 to borrow another book or any other key to go to the previous menu.")
 
                 try:
                     user_input = int(user_input.strip())
@@ -152,6 +157,7 @@ class MasterApplication(object):
     def __return_book(self, user: str):
         """
         Returns the book for the user and make the book available for another issue
+
         Args:
             user: username or email address of the user
         """
@@ -160,22 +166,36 @@ class MasterApplication(object):
 
         try_again = True
 
+        books_borrowed = self.__database.get_borrowed_book_id_by_user()
+
+        if len(books_borrowed) is 0:
+            print("\nNo books borrowed\n")
+            return
+
+        print("\nFollowing books have been borrowed from the library: \n")
+        for id_ in books_borrowed:
+            book = self.__database.get_book_by_id(id_)
+            print("\n\tID: {}  TITLE: {}  ISBN: {} AUTHOR: {}"
+                  .format(book[0], book[1], book[2], book[3])
+                  )
+
         # continue till user asks to stop
         while try_again:
             valid_input = False
             borrow_id = 0
+            book_id = None
 
             while not valid_input:
-                borrow_id = input("\nEnter borrow id")
+                book_id = input("\nEnter book id to return")
 
                 try:
-                    borrow_id = int(borrow_id.strip())
+                    book_id = int(borrow_id.strip())
                 except ValueError:
                     print("Invalid Input try again")
                     continue
                 valid_input = True
 
-            book_id = self.__database.get_book_id_by_borrow_id(borrow_id)
+            borrow_id = self.__database.get_borrow_id_by_book_and_user(book_id, user_id)
 
             book_borrowed = self.__database.confirm_borrow_status(borrow_id, user_id)
 
@@ -197,7 +217,7 @@ class MasterApplication(object):
             available_copies = self.__database.get_num_available_copies(book_id)
             self.__database.update_num_available_copies(book_id, available_copies + 1)
 
-            todays_date = datetime.date.today().strftime("%Y-%M-%D").__str__()
+            todays_date = datetime.date.today().__str__()
 
             self.__database.return_book(borrow_id, todays_date)
 
@@ -213,9 +233,8 @@ class MasterApplication(object):
             try_again = True if (user_input == 1) else False
 
     def __show_login_menu(self, user):
-        # self.__database.add_book("abcdef", "123321123", datetime.datetime.date.today(), "dkdkdkdk", 2)
-
-        print("Welcome! {}".format(user))
+      
+        print("Welcome! {}\n".format(user))
         option_selected = 5
         while True and option_selected == 5:
             user_input = input("\nEnter the option number to choose the option:\n"
