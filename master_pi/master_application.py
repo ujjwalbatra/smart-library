@@ -33,46 +33,44 @@ class MasterApplication(object):
             title_matches = self.__database.search_book_by_title(search_query)
 
             num_title_matches = len(title_matches)
-            print("hulululu")
-            print(num_title_matches)
 
             # if title matches are 5 or more then return 5 title matches.
             # Otherwise fill search result with ISBN and Author name matches, until 5 results
             if num_title_matches < search_limit:
-                partial_matches = title_matches
-                print("partial matches = ")
-                print(partial_matches)
+                partial_matches = title_matches if len(title_matches) is not 0 else [[]]
 
-                if len(partial_matches) < search_limit:
+                if len(partial_matches) <= search_limit:
+
                     author_matches = self.__database.search_book_by_author(search_query)
                     print("author matches = ")
                     print(author_matches)
 
-                    for i in author_matches:
-                        if len(partial_matches) < search_limit:
-                            partial_matches = partial_matches.extend(i)
+                    for i in range(0, 5):
+                        if len(partial_matches) <= search_limit:
+                            partial_matches.append(author_matches[i])
                         else:
                             break
 
                 isbn_matches = self.__database.search_book_by_isbn(search_query)
 
-                for i in isbn_matches:
-                    if len(partial_matches) < search_limit:
-                        partial_matches = partial_matches.extend(i)
+                for i in range(0, 5):
+                    if len(partial_matches) <= search_limit:
+                        partial_matches.append(isbn_matches[i])
                     else:
                         break
 
             else:
-                for i in range(0,5):
+                for i in range(0, 5):
                     if len(partial_matches) <= search_limit:
                         partial_matches.append(title_matches[i])
                     else:
                         break
-            print(partial_matches[1])
+
             # print all the matches on the console
-            for i in range(1,6):
+            for i in range(1, 6):
                 print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
-                       .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2], partial_matches[i][3], partial_matches[i][4])
+                      .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
+                              partial_matches[i][3], partial_matches[i][4])
                       )
 
             # ask user if want to search again...and repeat again if user presses 1
