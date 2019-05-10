@@ -239,7 +239,6 @@ class GcpDatabase:
                                     FROM book WHERE author LIKE %s ORDER BY title ASC''', (author,))
 
         row = self.__cursor.fetchall()
-        print(row)
         return row
 
     def add_book(self, title: str, isbn: str, published_date: str, author: str, total_copies: int):

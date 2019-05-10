@@ -29,22 +29,28 @@ class MasterApplication(object):
                 print("\nPlease enter a valid input.")
                 continue
 
-            partial_matches = []  # to keep all title, isbn and author matches
+            partial_matches = [[]]  # to keep all title, isbn and author matches
             title_matches = self.__database.search_book_by_title(search_query)
 
             num_title_matches = len(title_matches)
+            print("hulululu")
+            print(num_title_matches)
 
             # if title matches are 5 or more then return 5 title matches.
             # Otherwise fill search result with ISBN and Author name matches, until 5 results
             if num_title_matches < search_limit:
                 partial_matches = title_matches
+                print("partial matches = ")
+                print(partial_matches)
 
                 if len(partial_matches) < search_limit:
                     author_matches = self.__database.search_book_by_author(search_query)
+                    print("author matches = ")
+                    print(author_matches)
 
                     for i in author_matches:
                         if len(partial_matches) < search_limit:
-                            partial_matches = partial_matches.extend(author_matches[i])
+                            partial_matches = partial_matches.extend(i)
                         else:
                             break
 
@@ -52,23 +58,22 @@ class MasterApplication(object):
 
                 for i in isbn_matches:
                     if len(partial_matches) < search_limit:
-                        partial_matches = partial_matches.extend(isbn_matches[i])
+                        partial_matches = partial_matches.extend(i)
                     else:
                         break
 
             else:
-                for i in title_matches:
-                    if len(partial_matches) < search_limit:
-                        partial_matches.extend(title_matches[i])
+                for i in range(0,5):
+                    if len(partial_matches) <= search_limit:
+                        partial_matches.append(title_matches[i])
                     else:
                         break
-
+            print(partial_matches[1])
             # print all the matches on the console
-            for match in partial_matches:
-                print(match)
-                # print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
-                #       .format(match[0], match[1], match[2], match[3], match[4])
-                #       )
+            for i in range(1,6):
+                print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
+                       .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2], partial_matches[i][3], partial_matches[i][4])
+                      )
 
             # ask user if want to search again...and repeat again if user presses 1
             user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu.")
@@ -213,12 +218,8 @@ class MasterApplication(object):
             try_again = True if (user_input == 1) else False
 
     def __show_login_menu(self, user):
-        self.__database.add_book("abc", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
-        self.__database.add_book("abcd", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
-        self.__database.add_book("abcde", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
-        self.__database.add_book("ab", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
 
-        print("Welcome! {}".format(user))
+        print("Welcome! {}\n".format(user))
         option_selected = 5
         while True and option_selected == 5:
             user_input = input("\nEnter the option number to choose the option:\n"
