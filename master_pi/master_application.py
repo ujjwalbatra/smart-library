@@ -65,9 +65,10 @@ class MasterApplication(object):
 
             # print all the matches on the console
             for match in partial_matches:
-                print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
-                      .format(match[0], match[1], match[2], match[3], match[4])
-                      )
+                print(match)
+                # print("MATCHED RESULTS: \n\tID: {}  TITLE: {}  AUTHOR: {}  PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
+                #       .format(match[0], match[1], match[2], match[3], match[4])
+                #       )
 
             # ask user if want to search again...and repeat again if user presses 1
             user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu.")
@@ -212,7 +213,10 @@ class MasterApplication(object):
             try_again = True if (user_input == 1) else False
 
     def __show_login_menu(self, user):
-        # self.__database.add_book("abcdef", "123321123", date_today, "dkdkdkdk", 2)
+        self.__database.add_book("abc", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
+        self.__database.add_book("abcd", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
+        self.__database.add_book("abcde", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
+        self.__database.add_book("ab", "123321123", datetime.date.today().strftime("%Y-%M-%D").__str__(), "dkdkdkdk", 2)
 
         print("Welcome! {}".format(user))
         option_selected = 5
