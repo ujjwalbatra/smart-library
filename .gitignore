@@ -9,6 +9,7 @@ credentials.json
 token.pickle
 *.db
 
+*node_modeules/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -16,7 +17,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+*.idea
 # Distribution / packaging
 .Python
 build/

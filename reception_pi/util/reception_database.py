@@ -116,3 +116,13 @@ class ReceptionDatabase(object):
         row = self.__db_cursor.fetchone()
 
         return row[0]
+
+    def get_connection(self):
+        """
+        Returns reference to the connection established
+
+        Returns:
+            sql_connection: connection to the database
+        """
+
+        return self.__db_conn
