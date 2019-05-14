@@ -58,18 +58,18 @@ class GoogleCalendar(object):
         """
 
         summary = "username = {}\ntype = {}".format(username, type_)
-        description = "type = {}\ntitle = {}".format(type_, book_id)
+        description = "type = {}\nid = {}".format(type_, book_id)
 
         event = {
             'summary': summary,
             'location': '124 La Trobe St, Melbourne VIC 3000',
             'description': description,
             'start': {
-                'date': date,
+                'date': date.__str__(),
                 'timeZone': timezone,
             },
             'end': {
-                'date': date,
+                'date': date.__str__(),
                 'timeZone': timezone,
             },
         }

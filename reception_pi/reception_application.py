@@ -8,7 +8,7 @@ from util import reception_database
 from util import input_validation
 from util import socket_client
 
-logging.basicConfig(filename="./reception_pi/logs/reception-application.log", filemode='a', level=logging.DEBUG)
+logging.basicConfig(filename="./reception_pi/logs/reception_application.log", filemode='a', level=logging.DEBUG)
 
 
 class ReceptionApplication(object):

@@ -100,9 +100,8 @@ class GcpDatabase:
         """
 
         self.__cursor.execute('''UPDATE borrow_record SET status = %s, actual_return_date = %s 
-                                    WHERE borrow_id = %s''', ("returned", actual_return_date, borrow_id))
-
-        self.__cursor.execute()
+                                    WHERE id = %s''', ("returned", actual_return_date, borrow_id))
+        self.__connection.commit()
 
     def get_book_id_by_borrow_id(self, borrow_id: int):
         """
@@ -120,7 +119,7 @@ class GcpDatabase:
 
         row = self.__cursor.fetchone()
 
-        return row[0]
+        return row
 
     def get_borrow_id_by_book_and_user(self, book_id: int, user_id: int):
         """
@@ -139,7 +138,29 @@ class GcpDatabase:
 
         row = self.__cursor.fetchone()
 
-        return row[0]
+        return row
+
+    def book_already_borrowed(self, book_id: int, user_id: int):
+        """
+        Check if the book is already borrowed by the user
+
+        Args:
+            user_id: user id of the user who borrowed the book
+            book_id: id of the book borrowed
+
+        Returns:
+            boolean: true if user has a copy of the book otherwise false
+        """
+
+        self.__cursor.execute('''SELECT id FROM borrow_record WHERE book_id = %s AND user_id = %s AND status = %s''',
+                              (book_id, user_id, "borrowed"))
+
+        row = self.__cursor.fetchone()
+
+        if row:
+            return True
+        else:
+            return False
 
     def get_borrowed_book_id_by_user(self, user_id: int):
         """
@@ -220,7 +241,7 @@ class GcpDatabase:
             copies_available: new number of copies available
         """
 
-        self.__cursor.execute('''UPDATE book SET copies_available = %s WHERE book_id = %s''',
+        self.__cursor.execute('''UPDATE book SET copies_available = %s WHERE id = %s''',
                               (copies_available, book_id))
 
         self.__connection.commit()
