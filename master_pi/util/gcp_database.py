@@ -100,7 +100,7 @@ class GcpDatabase:
         """
 
         self.__cursor.execute('''UPDATE borrow_record SET status = %s, actual_return_date = %s 
-                                    WHERE borrow_id = %s''', ("returned", actual_return_date, borrow_id))
+                                    WHERE id = %s''', ("returned", actual_return_date, borrow_id))
 
         self.__cursor.execute()
 

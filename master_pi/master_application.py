@@ -204,7 +204,6 @@ class MasterApplication(object):
         # continue till user asks to stop
         while try_again:
             valid_input = False
-            borrow_id = 0
             book_id = None
 
             while not valid_input:
