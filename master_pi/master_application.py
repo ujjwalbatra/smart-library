@@ -134,6 +134,12 @@ class MasterApplication(object):
                     continue
                 valid_input = True
 
+            book_already_borrowed = self.__database.book_already_borrowed(book_id, user_id)
+
+            if book_already_borrowed:
+                print("Yoy already have a copy of the book. Please try another bool")
+                continue
+
             available_copies = self.__database.get_num_available_copies(book_id)
 
             # if book is not available, ask if user wants to try to borrow another book

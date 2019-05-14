@@ -139,6 +139,28 @@ class GcpDatabase:
 
         return row
 
+    def book_already_borrowed(self, book_id: int, user_id: int):
+        """
+        Check if the book is already borrowed by the user
+
+        Args:
+            user_id: user id of the user who borrowed the book
+            book_id: id of the book borrowed
+
+        Returns:
+            boolean: true if user has a copy of the book otherwise false
+        """
+
+        self.__cursor.execute('''SELECT id FROM borrow_record WHERE book_id = %s AND user_id = %s AND status = %s''',
+                              (book_id, user_id, "borrowed"))
+
+        row = self.__cursor.fetchone()
+
+        if row:
+            return True
+        else:
+            return False
+
     def get_borrowed_book_id_by_user(self, user_id: int):
         """
         Get books borrowed by a user
