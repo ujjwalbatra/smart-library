@@ -43,7 +43,6 @@ class MasterApplication(object):
 
                     author_matches = self.__database.search_book_by_author(search_query)
 
-
                     for i in range(0, 5):
                         if 0 < len(partial_matches) <= search_limit:
                             partial_matches.append(author_matches[i])
@@ -233,7 +232,7 @@ class MasterApplication(object):
             try_again = True if (user_input == 1) else False
 
     def __show_login_menu(self, user):
-      
+
         print("Welcome! {}\n".format(user))
         option_selected = 5
         while True and option_selected == 5:
