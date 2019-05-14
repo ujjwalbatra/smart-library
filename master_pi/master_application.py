@@ -248,7 +248,7 @@ class MasterApplication(object):
             self.__database.return_book(borrow_id, todays_date)
 
             user_input = input("\nBook {} successfully returned. "
-                               "Press 1 to return another book or any other key to go to the previous menu.: "
+                               "Press 1 to return another book or any other key to go to the previous menu: "
                                .format(book_id, borrow_id))
 
             try:
