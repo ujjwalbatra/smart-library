@@ -42,12 +42,12 @@ class MasterApplication(object):
             # if title matches are 5 or more then return 5 title matches.
             # Otherwise fill search result with ISBN and Author name matches, until 5 results
             if num_title_matches < search_limit:
-                
+
                 if len(title_matches) is not 0:
                     partial_matches = title_matches
                 else:
                     partial_matches = [[]]
-                
+
                 if len(partial_matches) <= search_limit:
 
                     author_matches = self.__database.search_book_by_author(search_query)
@@ -165,7 +165,8 @@ class MasterApplication(object):
                 self.__calendar.create_event(user, book_id, "expected return", return_date, "Australia/Melbourne")
 
                 user_input = input("\nBook {} successfully borrowed. "
-                                   "\nPress 1 to borrow another book or any other key to go to the previous menu: ".format(book_id))
+                                   "\nPress 1 to borrow another book or any other key to go to the previous menu: ".format(
+                    book_id))
 
                 try:
                     user_input = int(user_input)
@@ -196,7 +197,7 @@ class MasterApplication(object):
         print("\nFollowing books have been borrowed from the library: \n")
         for id_ in books_borrowed:
             book = self.__database.get_book_by_id(id_)
-            print("\n\tID: {}  TITLE: {}  ISBN: {} AUTHOR: {}"
+            print("\n\t\tID: {}  \n\tTITLE: {}  \n\tISBN: {} \n\tAUTHOR: {}"
                   .format(book[0], book[1], book[2], book[3])
                   )
 
