@@ -220,7 +220,7 @@ class GcpDatabase:
             copies_available: new number of copies available
         """
 
-        self.__cursor.execute('''UPDATE book SET copies_available = %s WHERE book_id = %s''',
+        self.__cursor.execute('''UPDATE book SET copies_available = %s WHERE id = %s''',
                               (copies_available, book_id))
 
         self.__connection.commit()

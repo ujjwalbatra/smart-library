@@ -23,16 +23,18 @@ class MasterApplication(object):
         search_again = True
 
         while search_again:
-            search_query = input("\nEnter search query:\t")
+            search_query = input("\nEnter search query: ")
 
             if len(search_query) < 1:
                 print("\nPlease enter a valid input.")
                 continue
 
-            partial_matches = [[]]  # to keep all title, isbn and author matches
             title_matches = self.__database.search_book_by_title(search_query)
 
             num_title_matches = len(title_matches)
+            title_matches = list(title_matches)
+
+            partial_matches = []
 
             # if title matches are 5 or more then return 5 title matches.
             # Otherwise fill search result with ISBN and Author name matches, until 5 results
@@ -42,17 +44,22 @@ class MasterApplication(object):
                 if len(partial_matches) <= search_limit:
 
                     author_matches = self.__database.search_book_by_author(search_query)
+                    author_matches = list(author_matches)
+                    
+                    limit = 5 if len(author_matches) > 5 else len(author_matches)
 
-
-                    for i in range(0, 5):
+                    for i in range(0, limit):
                         if 0 < len(partial_matches) <= search_limit:
                             partial_matches.append(author_matches[i])
                         else:
                             break
 
                 isbn_matches = self.__database.search_book_by_isbn(search_query)
+                isbn_matches = list(isbn_matches)
+                
+                limit = 5 if len(isbn_matches) > 5 else len(isbn_matches)
 
-                for i in range(0, 5):
+                for i in range(0, limit):
                     if 0 < len(partial_matches) <= search_limit:
                         partial_matches.append(isbn_matches[i])
                     else:
@@ -64,21 +71,24 @@ class MasterApplication(object):
                         partial_matches.append(title_matches[i])
                     else:
                         break
+            print(partial_matches)
 
-            if len(partial_matches > 0):
+            if len(partial_matches) > 0:
                 print("\n\nMATCHED RESULTS: ")
             else:
                 print("\n\nNo Matches found\n\n")
-
+            
+            limit = 5 if len(partial_matches) > 5 else len(partial_matches)
+            
             # print all the matches on the console
-            for i in range(1, 6):
-                print("\n\tID: {}  TITLE: {}  AUTHOR: {} ISBN: {} PUBLISHED DATE: {}  COPIES AVAILABLE:  {}"
+            for i in range(0, limit):
+                print("\n\n\t\tID: {}  \n\tTITLE: {}  \n\tAUTHOR: {} \n\tISBN: {} \n\tPUBLISHED DATE: {}  \n\tCOPIES AVAILABLE:  {}"
                       .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
                               partial_matches[i][3], partial_matches[i][4], partial_matches[i][5])
                       )
 
             # ask user if want to search again...and repeat again if user presses 1
-            user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu:\t")
+            user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu: ")
 
             try:
                 user_input = int(user_input)
@@ -106,7 +116,7 @@ class MasterApplication(object):
             book_id = 0
 
             while not valid_input:
-                book_id = input("\nEnter book id")
+                book_id = input("\nEnter book id: ")
 
                 try:
                     book_id = int(book_id.strip())
@@ -145,7 +155,7 @@ class MasterApplication(object):
                 self.__calendar.create_event(user, book_id, return_date, "Australia/Melbourne")
 
                 user_input = input("\nBook {} successfully borrowed. "
-                                   "\nPress 1 to borrow another book or any other key to go to the previous menu.")
+                        "\nPress 1 to borrow another book or any other key to go to the previous menu: ")
 
                 try:
                     user_input = int(user_input.strip())
@@ -186,7 +196,7 @@ class MasterApplication(object):
             book_id = None
 
             while not valid_input:
-                book_id = input("\nEnter book id to return")
+                book_id = input("\nEnter book id to return: ")
 
                 try:
                     book_id = int(borrow_id.strip())
@@ -202,7 +212,7 @@ class MasterApplication(object):
             # if book is not borrowed or not borrowed by this user.. then report invalid to the user
             if book_borrowed is False:
                 user_input = input("\nInvalid borrow id. Press 1 to try again or "
-                                   "anything else to go to the previous menu")
+                        "anything else to go to the previous menu: ")
 
                 try:
                     user_input = int(user_input.strip())
@@ -222,7 +232,7 @@ class MasterApplication(object):
             self.__database.return_book(borrow_id, todays_date)
 
             user_input = input("\nBook {} successfully returned. "
-                               "Press 1 to return another book or any other key to go to the previous menu."
+                    "Press 1 to return another book or any other key to go to the previous menu.: "
                                .format(book_id, borrow_id))
 
             try:
@@ -241,7 +251,8 @@ class MasterApplication(object):
                                "\t1. Search a book\n"
                                "\t2. Borrow a book\n"
                                "\t3. Return a book\n"
-                               "\t4. Logout\n\n")
+                               "\t4. Logout\n\n"
+                               "\nSelect an option: ")
             try:
                 option_selected = int(user_input)
             except ValueError:
