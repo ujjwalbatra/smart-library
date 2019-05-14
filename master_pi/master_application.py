@@ -137,8 +137,8 @@ class MasterApplication(object):
             book_already_borrowed = self.__database.book_already_borrowed(book_id, user_id)
 
             if book_already_borrowed:
-                print("Yoy already have a copy of the book. Please try another bool")
-                continue
+                print("Yoy already have a copy of the book. Please try another book")
+                break
 
             available_copies = self.__database.get_num_available_copies(book_id)
 
@@ -150,8 +150,7 @@ class MasterApplication(object):
                 try:
                     user_input = int(user_input)
                 except ValueError:
-                    print("Invaid input try again")
-                    user_input = 1
+                    break;
 
                 try_again = True if (user_input == 1) else False
 
@@ -177,8 +176,7 @@ class MasterApplication(object):
                 try:
                     user_input = int(user_input)
                 except ValueError:
-                    print("Invalid input try again")
-                    user_input = 1
+                    breaki
 
                 try_again = True if (user_input == 1) else False
 
@@ -219,14 +217,16 @@ class MasterApplication(object):
                     book_id = int(book_id)
                 except ValueError:
                     print("Invalid Input try again")
-                    continue
+                    break
                 valid_input = True
 
             borrow_id = self.__database.get_borrow_id_by_book_and_user(book_id, user_id)
 
             if borrow_id is None:
                 print("Invalid book ID. Please try again")
-                continue
+                break
+
+            borrow_id = borrow_id[0]
 
             book_borrowed = self.__database.confirm_borrow_status(borrow_id, user_id)
 
@@ -238,8 +238,7 @@ class MasterApplication(object):
                 try:
                     user_input = int(user_input)
                 except ValueError:
-                    print("Invalid Input try again")
-                    continue
+                    break
 
                 if user_input == 1:
                     continue
@@ -260,7 +259,7 @@ class MasterApplication(object):
             try:
                 user_input = int(user_input)
             except ValueError:
-                continue
+                break
 
             try_again = True if (user_input == 1) else False
 
