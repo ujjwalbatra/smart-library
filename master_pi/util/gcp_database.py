@@ -102,8 +102,6 @@ class GcpDatabase:
         self.__cursor.execute('''UPDATE borrow_record SET status = %s, actual_return_date = %s 
                                     WHERE id = %s''', ("returned", actual_return_date, borrow_id))
 
-        self.__cursor.execute()
-
     def get_book_id_by_borrow_id(self, borrow_id: int):
         """
         Get book id of the borrow record
@@ -138,7 +136,7 @@ class GcpDatabase:
                               (book_id, user_id, "borrowed"))
 
         row = self.__cursor.fetchone()
-        print(row)
+
         return row[0]
 
     def get_borrowed_book_id_by_user(self, user_id: int):
