@@ -218,6 +218,10 @@ class MasterApplication(object):
 
             borrow_id = self.__database.get_borrow_id_by_book_and_user(book_id, user_id)
 
+            if borrow_id is None:
+                print("Invalid book ID. Please try again")
+                continue
+
             book_borrowed = self.__database.confirm_borrow_status(borrow_id, user_id)
 
             # if book is not borrowed or not borrowed by this user.. then report invalid to the user
