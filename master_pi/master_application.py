@@ -210,7 +210,7 @@ class MasterApplication(object):
                 book_id = input("\nEnter book id to return: ")
 
                 try:
-                    book_id = int(borrow_id)
+                    book_id = int(book_id)
                 except ValueError:
                     print("Invalid Input try again")
                     continue
@@ -314,12 +314,7 @@ class MasterApplication(object):
 
 if __name__ == '__main__':
     master_application = None
-    try:
-        master_application = MasterApplication()
-        try:
-            master_application.main()
-        finally:
-            master_application.close_connection()
-    except Exception as e:
-        logging.warning("MASTER_PI: " + e.__str__() + " " + datetime.datetime.now().__str__())
     
+    master_application = MasterApplication()
+    master_application.main()
+    master_application.close_connection()

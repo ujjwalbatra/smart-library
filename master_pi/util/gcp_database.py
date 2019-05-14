@@ -138,7 +138,7 @@ class GcpDatabase:
                               (book_id, user_id, "borrowed"))
 
         row = self.__cursor.fetchone()
-
+        print(row)
         return row[0]
 
     def get_borrowed_book_id_by_user(self, user_id: int):
