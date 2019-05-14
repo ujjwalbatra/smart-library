@@ -65,11 +65,11 @@ class GoogleCalendar(object):
             'location': '124 La Trobe St, Melbourne VIC 3000',
             'description': description,
             'start': {
-                'date': date,
+                'date': date.__str__(),
                 'timeZone': timezone,
             },
             'end': {
-                'date': date,
+                'date': date.__str__(),
                 'timeZone': timezone,
             },
         }

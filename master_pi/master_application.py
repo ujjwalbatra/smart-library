@@ -42,7 +42,7 @@ class MasterApplication(object):
             # if title matches are 5 or more then return 5 title matches.
             # Otherwise fill search result with ISBN and Author name matches, until 5 results
             if num_title_matches < search_limit:
-                partial_matches = title_matches if len(title_matches) is not 0 else [[]]
+                partial_matches = title_matches if len(title_matches) is not 0 else []
 
                 if len(partial_matches) <= search_limit:
 
@@ -74,13 +74,12 @@ class MasterApplication(object):
                         partial_matches.append(title_matches[i])
                     else:
                         break
-            print(partial_matches)
 
             if len(partial_matches) > 0:
                 print("\n\nMATCHED RESULTS: ")
             else:
                 print("\n\nNo Matches found\n\n")
-
+            print(partial_matches)
             limit = 5 if len(partial_matches) > 5 else len(partial_matches)
 
             # print all the matches on the console
@@ -180,7 +179,7 @@ class MasterApplication(object):
 
         try_again = True
 
-        books_borrowed = self.__database.get_borrowed_book_id_by_user()
+        books_borrowed = self.__database.get_borrowed_book_id_by_user(user_id)
 
         if len(books_borrowed) is 0:
             print("\nNo books borrowed\n")
@@ -307,8 +306,10 @@ if __name__ == '__main__':
     master_application = None
     try:
         master_application = MasterApplication()
-        master_application.main()
+        try:
+            master_application.main()
+        finally:
+            master_application.close_connection()
     except Exception as e:
         logging.warning("MASTER_PI: " + e.__str__() + " " + datetime.datetime.now().__str__())
-    finally:
-        master_application.close_connection()
+    
