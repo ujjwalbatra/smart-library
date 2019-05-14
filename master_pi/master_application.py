@@ -314,7 +314,11 @@ class MasterApplication(object):
 
 if __name__ == '__main__':
     master_application = None
-    
-    master_application = MasterApplication()
-    master_application.main()
-    master_application.close_connection()
+    try:
+        master_application = MasterApplication()
+        try:
+            master_application.main()
+        finally:
+            master_application.close_connection()
+    except Exception as e:
+        logging.warning("MASTER_PI: " + e.__str__() + " " + datetime.datetime.now().__str__())
