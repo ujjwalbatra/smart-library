@@ -254,7 +254,6 @@ class MasterApplication(object):
             try:
                 user_input = int(user_input)
             except ValueError:
-                print("Invalid input try again")
                 continue
 
             try_again = True if (user_input == 1) else False
