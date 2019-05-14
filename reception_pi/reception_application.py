@@ -193,7 +193,8 @@ class ReceptionApplication(object):
                 option_selected = input("\nPlease select one of the following option:\n"
                                         "\t1. Login\n"
                                         "\t2. Register a new account\n"
-                                        "\t3. Quit\n")
+                                        "\t3. Quit\n"
+                                        "\nSelect an option: ")
 
                 # if user input is not an integer then ask for input again
                 try:
