@@ -42,8 +42,12 @@ class MasterApplication(object):
             # if title matches are 5 or more then return 5 title matches.
             # Otherwise fill search result with ISBN and Author name matches, until 5 results
             if num_title_matches < search_limit:
-                partial_matches = title_matches if len(title_matches) is not 0 else []
-
+                
+                if len(title_matches) is not 0:
+                    partial_matches = title_matches
+                else:
+                    partial_matches = [[]]
+                
                 if len(partial_matches) <= search_limit:
 
                     author_matches = self.__database.search_book_by_author(search_query)
@@ -79,11 +83,13 @@ class MasterApplication(object):
                 print("\n\nMATCHED RESULTS: ")
             else:
                 print("\n\nNo Matches found\n\n")
-            print(partial_matches)
+
             limit = 5 if len(partial_matches) > 5 else len(partial_matches)
 
             # print all the matches on the console
             for i in range(0, limit):
+                if len(partial_matches[i]) < 6:
+                    continue
                 print("\n\n\t\tID: {}  \n\tTITLE: {}  \n\tAUTHOR: {} "
                       "\n\tISBN: {} \n\tPUBLISHED DATE: {}  \n\tCOPIES AVAILABLE:  {}"
                       .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
@@ -122,7 +128,7 @@ class MasterApplication(object):
                 book_id = input("\nEnter book id: ")
 
                 try:
-                    book_id = int(book_id.strip())
+                    book_id = int(book_id)
                 except ValueError:
                     print("Invalid Input try again")
                     continue
@@ -136,9 +142,10 @@ class MasterApplication(object):
                 user_input = input("Book not available. Press 1 to continue or "
                                    "any other key to go to the previous menu.")
                 try:
-                    user_input = int(user_input.strip())
+                    user_input = int(user_input)
                 except ValueError:
-                    break
+                    print("Invaid input try again")
+                    user_input = 1
 
                 try_again = True if (user_input == 1) else False
 
@@ -154,16 +161,17 @@ class MasterApplication(object):
                 todays_date = datetime.date.today().__str__()
 
                 # create issue and return date calendar events
-                self.__calendar.create_event(user, book_id, todays_date, "Australia/Melbourne")
-                self.__calendar.create_event(user, book_id, return_date, "Australia/Melbourne")
+                self.__calendar.create_event(user, book_id, "borrowed", todays_date, "Australia/Melbourne")
+                self.__calendar.create_event(user, book_id, "expected return", return_date, "Australia/Melbourne")
 
                 user_input = input("\nBook {} successfully borrowed. "
-                                   "\nPress 1 to borrow another book or any other key to go to the previous menu: ")
+                                   "\nPress 1 to borrow another book or any other key to go to the previous menu: ".format(book_id))
 
                 try:
-                    user_input = int(user_input.strip())
+                    user_input = int(user_input)
                 except ValueError:
-                    break
+                    print("Invalid input try again")
+                    user_input = 1
 
                 try_again = True if (user_input == 1) else False
 
@@ -202,7 +210,7 @@ class MasterApplication(object):
                 book_id = input("\nEnter book id to return: ")
 
                 try:
-                    book_id = int(borrow_id.strip())
+                    book_id = int(borrow_id)
                 except ValueError:
                     print("Invalid Input try again")
                     continue
@@ -218,9 +226,10 @@ class MasterApplication(object):
                                    "anything else to go to the previous menu: ")
 
                 try:
-                    user_input = int(user_input.strip())
+                    user_input = int(user_input)
                 except ValueError:
-                    break
+                    print("Invalid Input try again")
+                    continue
 
                 if user_input == 1:
                     continue
@@ -239,9 +248,10 @@ class MasterApplication(object):
                                .format(book_id, borrow_id))
 
             try:
-                user_input = int(user_input.strip())
+                user_input = int(user_input)
             except ValueError:
-                break
+                print("Invalid input try again")
+                continue
 
             try_again = True if (user_input == 1) else False
 
