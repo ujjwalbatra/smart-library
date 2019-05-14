@@ -1,8 +1,11 @@
 import datetime
 import json
+import logging
 from util import google_calendar
 from util import gcp_database
 from util import socket_host
+
+logging.basicConfig(filename="./master_pi/logs/master_application.log", filemode='a', level=logging.DEBUG)
 
 
 class MasterApplication(object):
@@ -45,7 +48,7 @@ class MasterApplication(object):
 
                     author_matches = self.__database.search_book_by_author(search_query)
                     author_matches = list(author_matches)
-                    
+
                     limit = 5 if len(author_matches) > 5 else len(author_matches)
 
                     for i in range(0, limit):
@@ -56,7 +59,7 @@ class MasterApplication(object):
 
                 isbn_matches = self.__database.search_book_by_isbn(search_query)
                 isbn_matches = list(isbn_matches)
-                
+
                 limit = 5 if len(isbn_matches) > 5 else len(isbn_matches)
 
                 for i in range(0, limit):
@@ -77,12 +80,13 @@ class MasterApplication(object):
                 print("\n\nMATCHED RESULTS: ")
             else:
                 print("\n\nNo Matches found\n\n")
-            
+
             limit = 5 if len(partial_matches) > 5 else len(partial_matches)
-            
+
             # print all the matches on the console
             for i in range(0, limit):
-                print("\n\n\t\tID: {}  \n\tTITLE: {}  \n\tAUTHOR: {} \n\tISBN: {} \n\tPUBLISHED DATE: {}  \n\tCOPIES AVAILABLE:  {}"
+                print("\n\n\t\tID: {}  \n\tTITLE: {}  \n\tAUTHOR: {} "
+                      "\n\tISBN: {} \n\tPUBLISHED DATE: {}  \n\tCOPIES AVAILABLE:  {}"
                       .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
                               partial_matches[i][3], partial_matches[i][4], partial_matches[i][5])
                       )
@@ -155,7 +159,7 @@ class MasterApplication(object):
                 self.__calendar.create_event(user, book_id, return_date, "Australia/Melbourne")
 
                 user_input = input("\nBook {} successfully borrowed. "
-                        "\nPress 1 to borrow another book or any other key to go to the previous menu: ")
+                                   "\nPress 1 to borrow another book or any other key to go to the previous menu: ")
 
                 try:
                     user_input = int(user_input.strip())
@@ -212,7 +216,7 @@ class MasterApplication(object):
             # if book is not borrowed or not borrowed by this user.. then report invalid to the user
             if book_borrowed is False:
                 user_input = input("\nInvalid borrow id. Press 1 to try again or "
-                        "anything else to go to the previous menu: ")
+                                   "anything else to go to the previous menu: ")
 
                 try:
                     user_input = int(user_input.strip())
@@ -232,7 +236,7 @@ class MasterApplication(object):
             self.__database.return_book(borrow_id, todays_date)
 
             user_input = input("\nBook {} successfully returned. "
-                    "Press 1 to return another book or any other key to go to the previous menu.: "
+                               "Press 1 to return another book or any other key to go to the previous menu.: "
                                .format(book_id, borrow_id))
 
             try:
@@ -243,7 +247,7 @@ class MasterApplication(object):
             try_again = True if (user_input == 1) else False
 
     def __show_login_menu(self, user):
-      
+
         print("Welcome! {}\n".format(user))
         option_selected = 5
         while True and option_selected == 5:
@@ -273,6 +277,13 @@ class MasterApplication(object):
             elif option_selected == 5:
                 print("\nWrong Input! Try Again...")
 
+    def close_connection(self):
+        """
+        releases all database and sockets resources
+        """
+        self.__socket.close()
+        self.__database.close()
+
     def main(self):
         while True:
             print("Waiting for client...")
@@ -293,5 +304,11 @@ class MasterApplication(object):
 
 
 if __name__ == '__main__':
-    master_application = MasterApplication()
-    master_application.main()
+    master_application = None
+    try:
+        master_application = MasterApplication()
+        master_application.main()
+    except Exception as e:
+        logging.warning("MASTER_PI: " + e.__str__() + " " + datetime.datetime.now().__str__())
+    finally:
+        master_application.close_connection()
