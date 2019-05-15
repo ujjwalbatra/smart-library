@@ -37,6 +37,8 @@ class VoiceSearch(object):
     def main(self):
         # Set the device ID of the mic that we specifically want to use to avoid ambiguity
         for i, microphone_name in enumerate(sr.Microphone.list_microphone_names()):
+            print(i)
+            print(microphone_name)
             if microphone_name == self.__mic_name:
                 device_id = i
                 break
@@ -71,4 +73,4 @@ class VoiceSearch(object):
 
 
 if __name__ == '__main__':
-    print(VoiceSearch.main())
+    print(VoiceSearch().main())
