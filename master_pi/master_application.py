@@ -337,7 +337,7 @@ class MasterApplication(object):
             try:
                 option_selected = int(user_input)
             except ValueError:
-                option_selected = 5
+                option_selected = 6
 
             if option_selected == 1:
                 self.__console_search_book()
