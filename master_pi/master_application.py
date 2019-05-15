@@ -114,6 +114,7 @@ class MasterApplication(object):
                   .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
                           partial_matches[i][3], partial_matches[i][4], partial_matches[i][5])
                   )
+        return False
 
     def __borrow_book(self, user: str):
         """
