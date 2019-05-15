@@ -16,85 +16,20 @@ class MasterApplication(object):
         self.__database.create_tables()
         self.__socket = socket_host.SocketHost()
 
-    def __search_book(self):
+    def __console_search_book(self):
         """
-        Searches for book in the database for partial matches against Title, Author Name or ISBN.
+        Searches for book in the database from console for partial matches against Title, Author Name or ISBN.
         Returns maximum 5 matches and matches in the following order: title -> author -> isbn
         """
 
-        search_limit = 5  # will return these many results only
         search_again = True
 
         while search_again:
             search_query = input("\nEnter search query: ")
+            search_again = self.__search_book(search_query)
 
-            if len(search_query) < 1:
-                print("\nPlease enter a valid input.")
+            if search_query:
                 continue
-
-            title_matches = self.__database.search_book_by_title(search_query)
-
-            num_title_matches = len(title_matches)
-            title_matches = list(title_matches)
-
-            partial_matches = []
-
-            # if title matches are 5 or more then return 5 title matches.
-            # Otherwise fill search result with ISBN and Author name matches, until 5 results
-            if num_title_matches < search_limit:
-
-                if len(title_matches) is not 0:
-                    partial_matches = title_matches
-                else:
-                    partial_matches = [[]]
-
-                if len(partial_matches) <= search_limit:
-
-                    author_matches = self.__database.search_book_by_author(search_query)
-                    author_matches = list(author_matches)
-
-                    limit = 5 if len(author_matches) > 5 else len(author_matches)
-
-                    for i in range(0, limit):
-                        if 0 < len(partial_matches) <= search_limit:
-                            partial_matches.append(author_matches[i])
-                        else:
-                            break
-
-                isbn_matches = self.__database.search_book_by_isbn(search_query)
-                isbn_matches = list(isbn_matches)
-
-                limit = 5 if len(isbn_matches) > 5 else len(isbn_matches)
-
-                for i in range(0, limit):
-                    if 0 < len(partial_matches) <= search_limit:
-                        partial_matches.append(isbn_matches[i])
-                    else:
-                        break
-
-            else:
-                for i in range(0, 5):
-                    if 0 < len(partial_matches) <= search_limit:
-                        partial_matches.append(title_matches[i])
-                    else:
-                        break
-
-            if len(partial_matches) > 0:
-                print("\n\nMATCHED RESULTS: ")
-            else:
-                print("\n\nNo Matches found\n\n")
-
-            limit = 5 if len(partial_matches) > 5 else len(partial_matches)
-
-            # print all the matches on the console
-            for i in range(0, limit):
-                if len(partial_matches[i]) < 6:
-                    continue
-                print("\n\n\t\tID: {}  \n\tTITLE: {}  \n\tAUTHOR: {} "
-                      "\n\tISBN: {} \n\tPUBLISHED DATE: {}  \n\tCOPIES AVAILABLE:  {}"
-                      .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
-                              partial_matches[i][3], partial_matches[i][4], partial_matches[i][5])
-                      )
 
             # ask user if want to search again...and repeat again if user presses 1
             user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu: ")
@@ -105,6 +40,80 @@ class MasterApplication(object):
                 user_input = 5
 
             search_again = True if user_input == 1 else False
+
+    def __search_book(self, search_query: str):
+
+        search_limit = 5  # will return these many results only
+
+        if len(search_query) <= 1:
+            print("\nInvalid search query.")
+            return True
+
+        title_matches = self.__database.search_book_by_title(search_query)
+
+        num_title_matches = len(title_matches)
+        title_matches = list(title_matches)
+
+        partial_matches = []
+
+        # if title matches are 5 or more then return 5 title matches.
+        # Otherwise fill search result with ISBN and Author name matches, until 5 results
+        if num_title_matches < search_limit:
+
+            if len(title_matches) is not 0:
+                partial_matches = title_matches
+            else:
+                partial_matches = [[]]
+
+            if len(partial_matches) <= search_limit:
+
+                author_matches = self.__database.search_book_by_author(search_query)
+                author_matches = list(author_matches)
+
+                limit = 5 if len(author_matches) > 5 else len(author_matches)
+
+                for i in range(0, limit):
+                    if 0 < len(partial_matches) <= search_limit:
+                        partial_matches.append(author_matches[i])
+                    else:
+                        break
+
+            isbn_matches = self.__database.search_book_by_isbn(search_query)
+            isbn_matches = list(isbn_matches)
+
+            limit = 5 if len(isbn_matches) > 5 else len(isbn_matches)
+
+            for i in range(0, limit):
+                if 0 < len(partial_matches) <= search_limit:
+                    partial_matches.append(isbn_matches[i])
+                else:
+                    break
+
+        else:
+            for i in range(0, 5):
+                if 0 < len(partial_matches) <= search_limit:
+                    partial_matches.append(title_matches[i])
+                else:
+                    break
+
+        if len(partial_matches) > 0:
+            print("\n\nMATCHED RESULTS: ")
+        else:
+            print("\n\nNo Matches found\n\n")
+
+        for i in partial_matches:
+            if len(i) < 6:
+                partial_matches.remove(i)
+
+        limit = 5 if len(partial_matches) > 5 else len(partial_matches)
+
+        # print all the matches on the console
+        for i in range(0, limit):
+            print("\n\n\t\tID: {}  \n\tTITLE: {}  \n\tAUTHOR: {} "
+                  "\n\tISBN: {} \n\tPUBLISHED DATE: {}  \n\tCOPIES AVAILABLE:  {}"
+                  .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
+                          partial_matches[i][3], partial_matches[i][4], partial_matches[i][5])
+                  )
 
     def __borrow_book(self, user: str):
         """
@@ -176,7 +185,7 @@ class MasterApplication(object):
                 try:
                     user_input = int(user_input)
                 except ValueError:
-                    breaki
+                    break
 
                 try_again = True if (user_input == 1) else False
 
@@ -280,7 +289,7 @@ class MasterApplication(object):
                 option_selected = 5
 
             if option_selected == 1:
-                self.__search_book()
+                self.__console_search_book()
                 option_selected = 5
             elif option_selected == 2:
                 self.__borrow_book(user)
