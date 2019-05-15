@@ -35,14 +35,13 @@ class VoiceSearch(object):
             return data['voice_api_key']
 
     def main(self):
+        
         # Set the device ID of the mic that we specifically want to use to avoid ambiguity
         for i, microphone_name in enumerate(sr.Microphone.list_microphone_names()):
-            print(i)
-            print(microphone_name)
             if microphone_name == self.__mic_name:
                 device_id = i
                 break
-
+        
         # obtain audio from the microphone
         r = sr.Recognizer()
         with sr.Microphone(device_index=device_id) as source:
@@ -66,7 +65,7 @@ class VoiceSearch(object):
             # for testing purposes, we're just using the default API key
             # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
             # instead of `r.recognize_google(audio)`
-            voice_input = r.recognize_google(audio, key=self.__api_key)
+            voice_input = r.recognize_google(audio)
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
         except sr.RequestError:
