@@ -18,8 +18,31 @@ class MasterApplication(object):
 
     def __console_search_book(self):
         """
-        Searches for book in the database from console for partial matches against Title, Author Name or ISBN.
-        Returns maximum 5 matches and matches in the following order: title -> author -> isbn
+        Takes in search query on console and passes it to search_book()
+        """
+
+        search_again = True
+
+        while search_again:
+            search_query = input("\nEnter search query: ")
+            search_again = self.__search_book(search_query)
+
+            if search_query is True:
+                continue
+
+            # ask user if want to search again...and repeat again if user presses 1
+            user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu: ")
+
+            try:
+                user_input = int(user_input)
+            except ValueError:
+                user_input = 5
+
+            search_again = True if user_input == 1 else False
+
+    def __voice_search_book(self):
+        """
+        Takes in search query as a Voice Command and passes it to search_book()
         """
 
         search_again = True
@@ -42,6 +65,16 @@ class MasterApplication(object):
             search_again = True if user_input == 1 else False
 
     def __search_book(self, search_query: str):
+        """
+        Searches for a book in the library on partial match of search query and print top 5 results to the console.
+
+        Args:
+            search_query: book name/author/isbn
+
+        Returns:
+            boolean: True if there was a fault and want to search again, False if not sure
+
+        """
 
         search_limit = 5  # will return these many results only
 
@@ -277,13 +310,14 @@ class MasterApplication(object):
     def __show_login_menu(self, user):
 
         print("Welcome! {}\n".format(user))
-        option_selected = 5
-        while True and option_selected == 5:
+        option_selected = 6
+        while True and option_selected == 6:
             user_input = input("\nEnter the option number to choose the option:\n"
-                               "\t1. Search a book\n"
-                               "\t2. Borrow a book\n"
-                               "\t3. Return a book\n"
-                               "\t4. Logout\n\n"
+                               "\t1. Type and search a book\n"
+                               "\t2. Use voice search to search a book"
+                               "\t3. Borrow a book\n"
+                               "\t4. Return a book\n"
+                               "\t5. Logout\n\n"
                                "\nSelect an option: ")
             try:
                 option_selected = int(user_input)
@@ -292,17 +326,20 @@ class MasterApplication(object):
 
             if option_selected == 1:
                 self.__console_search_book()
-                option_selected = 5
+                option_selected = 6
             elif option_selected == 2:
-                self.__borrow_book(user)
-                option_selected = 5
+                self.__voice_search_book()
+                option_selected = 6
             elif option_selected == 3:
-                self.__return_book(user)
-                option_selected = 5
+                self.__borrow_book(user)
+                option_selected = 6
             elif option_selected == 4:
+                self.__return_book(user)
+                option_selected = 6
+            elif option_selected == 5:
                 print("Logging out...")
                 break
-            elif option_selected == 5:
+            elif option_selected == 6:
                 print("\nWrong Input! Try Again...")
 
     def close_connection(self):

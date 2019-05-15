@@ -2,7 +2,7 @@ import json
 import socket
 
 
-class SocketHost():
+class SocketHost(object):
     CONFIG_FILE = 'master_pi/config.json'
 
     def __init__(self):
