@@ -30,6 +30,7 @@ class MasterApplication(object):
             search_again = self.__search_book(search_query)
 
             if search_again is True:
+		print("\nTry again!\n")
                 continue
 
             # ask user if want to search again...and repeat again if user presses 1
@@ -51,9 +52,14 @@ class MasterApplication(object):
 
         while search_again:
             voice_input = self.__voice_search.get_voice_input("Say the Book Title or author name to search for.")
+            
+            if voice_input is None:
+                continue
 
-            print("You said: {}".format(voice_input))
-            confirmation = self.__voice_search.get_voice_input("Say yes to proceed with search and no to try again")
+            confirmation = self.__voice_search.get_voice_input("You said: {}\nSay yes to proceed with search and no to try again".format(voice_input))
+            
+            if confirmation is None: 
+                continue
 
             if confirmation.lower() == "no":
                 continue
@@ -323,7 +329,7 @@ class MasterApplication(object):
         while True and option_selected == 6:
             user_input = input("\nEnter the option number to choose the option:\n"
                                "\t1. Type and search a book\n"
-                               "\t2. Use voice search to search a book"
+                               "\t2. Use voice search to search a book\n"
                                "\t3. Borrow a book\n"
                                "\t4. Return a book\n"
                                "\t5. Logout\n\n"

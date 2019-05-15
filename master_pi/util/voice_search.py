@@ -63,10 +63,10 @@ class VoiceSearch(object):
 
             print(message)
             try:
-                audio = r.listen(source, timeout=1.5)
+                audio = r.listen(source, timeout=5)
             except sr.WaitTimeoutError:
-                print("Listening timed out whilst waiting for phrase to start")
-                quit()
+                print("Listening timed out whilst waiting for voice")
+                return None
 
         # recognize speech using Google Speech Recognition
         voice_input = None
