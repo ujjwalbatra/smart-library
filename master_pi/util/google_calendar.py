@@ -45,7 +45,7 @@ class GoogleCalendar(object):
 
         return service
 
-    def create_event(self, username: str, book_id: int, type_: str, date: datetime.date, timezone: str):
+    def create_event(self, username: str, book_id: int, type_: str, date: datetime.date):
         """
         Creates a google calendar event.
 
@@ -54,7 +54,6 @@ class GoogleCalendar(object):
             book_id: id of the book
             type_: can be either book_issued or book_return_date
             date: date of the event
-            timezone:
         """
 
         summary = "username = {}\ntype = {}".format(username, type_)
@@ -66,11 +65,11 @@ class GoogleCalendar(object):
             'description': description,
             'start': {
                 'date': date.__str__(),
-                'timeZone': timezone,
+                'timeZone': "UTC",
             },
             'end': {
                 'date': date.__str__(),
-                'timeZone': timezone,
+                'timeZone': "UTC",
             },
         }
 

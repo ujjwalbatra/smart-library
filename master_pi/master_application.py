@@ -4,6 +4,7 @@ import logging
 from util import google_calendar
 from util import gcp_database
 from util import socket_host
+from util import voice_search
 
 logging.basicConfig(filename="./master_pi/logs/master_application.log", filemode='a', level=logging.DEBUG)
 
@@ -15,6 +16,7 @@ class MasterApplication(object):
         self.__calendar = google_calendar.GoogleCalendar()
         self.__database.create_tables()
         self.__socket = socket_host.SocketHost()
+        self.__voice_search = voice_search.VoiceSearch()
 
     def __console_search_book(self):
         """
@@ -27,7 +29,7 @@ class MasterApplication(object):
             search_query = input("\nEnter search query: ")
             search_again = self.__search_book(search_query)
 
-            if search_query is True:
+            if search_again is True:
                 continue
 
             # ask user if want to search again...and repeat again if user presses 1
@@ -48,10 +50,17 @@ class MasterApplication(object):
         search_again = True
 
         while search_again:
-            search_query = input("\nEnter search query: ")
-            search_again = self.__search_book(search_query)
+            voice_input = self.__voice_search.get_voice_input("Say the Book Title or author name to search for.")
 
-            if search_query is True:
+            print("You said: {}".format(voice_input))
+            confirmation = self.__voice_search.get_voice_input("Say yes to proceed with search and no to try again")
+
+            if confirmation.lower() == "no":
+                continue
+
+            search_again = self.__search_book(voice_input)
+
+            if search_again is True:
                 continue
 
             # ask user if want to search again...and repeat again if user presses 1
@@ -210,12 +219,12 @@ class MasterApplication(object):
                 todays_date = datetime.date.today().__str__()
 
                 # create issue and return date calendar events
-                self.__calendar.create_event(user, book_id, "borrowed", todays_date, "Australia/Melbourne")
-                self.__calendar.create_event(user, book_id, "expected return", return_date, "Australia/Melbourne")
+                self.__calendar.create_event(user, book_id, "borrowed", todays_date)
+                self.__calendar.create_event(user, book_id, "expected return", return_date)
 
                 user_input = input("\nBook {} successfully borrowed. "
-                                   "\nPress 1 to borrow another book or any other key to go to the previous menu: ".format(
-                    book_id))
+                                   "\nPress 1 to borrow another book or any other key to go to the previous menu: "
+                                   .format(book_id))
 
                 try:
                     user_input = int(user_input)

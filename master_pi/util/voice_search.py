@@ -34,14 +34,23 @@ class VoiceSearch(object):
             data = json.load(json_file)
             return data['voice_api_key']
 
-    def main(self):
-        
+    def get_voice_input(self, message: str):
+        """
+        Listens to users voice input and converts it to text
+
+        Args:
+            message: message to print before listing
+
+        Returns:
+            string: text of the speech input
+
+        """
         # Set the device ID of the mic that we specifically want to use to avoid ambiguity
         for i, microphone_name in enumerate(sr.Microphone.list_microphone_names()):
             if microphone_name == self.__mic_name:
                 device_id = i
                 break
-        
+
         # obtain audio from the microphone
         r = sr.Recognizer()
         with sr.Microphone(device_index=device_id) as source:
@@ -52,7 +61,7 @@ class VoiceSearch(object):
             # energy threshold based on the surrounding noise level
             r.adjust_for_ambient_noise(source)
 
-            print("Say the Book Title or author name to search for.")
+            print(message)
             try:
                 audio = r.listen(source, timeout=1.5)
             except sr.WaitTimeoutError:
@@ -72,7 +81,3 @@ class VoiceSearch(object):
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
         finally:
             return voice_input
-
-
-if __name__ == '__main__':
-    print(VoiceSearch().main())
