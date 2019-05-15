@@ -28,7 +28,7 @@ class MasterApplication(object):
             search_query = input("\nEnter search query: ")
             search_again = self.__search_book(search_query)
 
-            if search_query:
+            if search_query is True:
                 continue
 
             # ask user if want to search again...and repeat again if user presses 1
@@ -114,6 +114,7 @@ class MasterApplication(object):
                   .format(partial_matches[i][0], partial_matches[i][1], partial_matches[i][2],
                           partial_matches[i][3], partial_matches[i][4], partial_matches[i][5])
                   )
+
         return False
 
     def __borrow_book(self, user: str):
