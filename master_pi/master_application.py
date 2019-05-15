@@ -96,14 +96,14 @@ class MasterApplication(object):
                 else:
                     break
 
+        for i in partial_matches:
+            if len(i) < 6:
+                partial_matches.remove(i)
+
         if len(partial_matches) > 0:
             print("\n\nMATCHED RESULTS: ")
         else:
             print("\n\nNo Matches found\n\n")
-
-        for i in partial_matches:
-            if len(i) < 6:
-                partial_matches.remove(i)
 
         limit = 5 if len(partial_matches) > 5 else len(partial_matches)
 
