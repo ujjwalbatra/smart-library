@@ -57,7 +57,8 @@ class VoiceSearch(object):
             try:
                 audio = r.listen(source, timeout=1.5)
             except sr.WaitTimeoutError:
-                return None
+                print("Listening timed out whilst waiting for phrase to start")
+                quit()
 
         # recognize speech using Google Speech Recognition
         voice_input = None
@@ -66,8 +67,10 @@ class VoiceSearch(object):
             # to use another API key, use `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
             # instead of `r.recognize_google(audio)`
             voice_input = r.recognize_google(audio, key=self.__api_key)
-        except(sr.UnknownValueError, sr.RequestError):
-            pass
+        except sr.UnknownValueError:
+            print("Google Speech Recognition could not understand audio")
+        except sr.RequestError:
+            print("Could not request results from Google Speech Recognition service; {0}".format(e))
         finally:
             return voice_input
 
