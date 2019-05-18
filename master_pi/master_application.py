@@ -17,7 +17,7 @@ class MasterApplication(object):
         self.__calendar = google_calendar.GoogleCalendar()
         self.__database.create_tables()
         self.__socket = socket_host.SocketHost()
-        #self.__voice_search = voice_search.VoiceSearch()
+        self.__voice_search = voice_search.VoiceSearch()
 
     def __console_search_book(self):
         """
