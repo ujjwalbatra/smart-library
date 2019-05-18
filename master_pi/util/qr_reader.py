@@ -7,7 +7,6 @@ import cv2
 
 class QrReader():
     def __init__(self):
-        print("[INFO] starting video stream...")
         self.__video_stream = VideoStream(src = 0).start()
 
         #Allow time for video stream to start up
@@ -25,6 +24,7 @@ class QrReader():
         """
 
         start_time = time.time()
+        found_codes = []
 
         while True:
             frame = self.__video_stream.read()
@@ -33,14 +33,17 @@ class QrReader():
             barcodes = pyzbar.decode(frame)
 
             if len(barcodes) > 0:
-                return list(map(self.__decode_barcode, barcodes))
+                found_codes = list(map(self.__decode_barcode, barcodes))
 
             elapsed_time = time.time() - start_time
 
             if elapsed_time > timeout:
-                return []
+                break
 
             time.sleep(1)
+
+        self.__video_stream.stop()
+        return found_codes
 
     def __decode_barcode(self, barcode):
         return barcode.data.decode("utf-8")

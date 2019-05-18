@@ -5,6 +5,7 @@ from util import google_calendar
 from util import gcp_database
 from util import socket_host
 from util import voice_search
+from util import qr_reader
 
 logging.basicConfig(filename="./master_pi/logs/master_application.log", filemode='a', level=logging.DEBUG)
 
@@ -16,7 +17,7 @@ class MasterApplication(object):
         self.__calendar = google_calendar.GoogleCalendar()
         self.__database.create_tables()
         self.__socket = socket_host.SocketHost()
-        self.__voice_search = voice_search.VoiceSearch()
+        #self.__voice_search = voice_search.VoiceSearch()
 
     def __console_search_book(self):
         """
@@ -283,7 +284,102 @@ class MasterApplication(object):
             borrow_id = self.__database.get_borrow_id_by_book_and_user(book_id, user_id)
 
             if borrow_id is None:
-                print("Invalid book ID. Please try again")
+                print("That book isn't borrowed by you")
+                break
+
+            borrow_id = borrow_id[0]
+
+            book_borrowed = self.__database.confirm_borrow_status(borrow_id, user_id)
+
+            # if book is not borrowed or not borrowed by this user.. then report invalid to the user
+            if book_borrowed is False:
+                user_input = input("\nInvalid borrow id. Press 1 to try again or "
+                                   "anything else to go to the previous menu: ")
+
+                try:
+                    user_input = int(user_input)
+                except ValueError:
+                    break
+
+                if user_input == 1:
+                    continue
+                else:
+                    break
+
+            available_copies = self.__database.get_num_available_copies(book_id)
+            self.__database.update_num_available_copies(book_id, available_copies + 1)
+
+            todays_date = datetime.date.today().__str__()
+
+            self.__database.return_book(borrow_id, todays_date)
+
+            user_input = input("\nBook {} successfully returned. "
+                               "Press 1 to return another book or any other key to go to the previous menu: "
+                               .format(book_id, borrow_id))
+
+            try:
+                user_input = int(user_input)
+            except ValueError:
+                break
+
+            try_again = True if (user_input == 1) else False
+
+    def __scan_and_return_book(self, user: str):
+        """
+        Returns the book for the user and make the book available for another issue
+
+        Args:
+            user: username or email address of the user
+        """
+
+        print("\nStarting camera...\n")
+        reader = qr_reader.QrReader()
+
+        user_id = self.__database.get_user_id_by_user(user)
+
+        try_again = True
+
+        books_borrowed = self.__database.get_borrowed_book_id_by_user(user_id)
+
+        if len(books_borrowed) is 0:
+            print("\nNo books borrowed\n")
+            return
+
+        print("\nFollowing books have been borrowed from the library: \n")
+        for id_ in books_borrowed:
+            book = self.__database.get_book_by_id(id_)
+            print("\n\t\tID: {}  \n\tTITLE: {}  \n\tISBN: {} \n\tAUTHOR: {}"
+                  .format(book[0], book[1], book[2], book[3])
+                  )
+
+        # continue till user asks to stop
+        while try_again:
+            valid_input = False
+            book_id = None
+
+            while not valid_input:
+                print("\nScan book to return...\n")
+                found_codes = reader.find_codes_with_timeout(10)
+                if len(found_codes) == 0:
+                    print("No book detected")
+                    return
+
+                if len(found_codes) > 1:
+                    print("Multiple books detected try again")
+
+                book_id = found_codes[0]
+
+                try:
+                    book_id = int(book_id)
+                except ValueError:
+                    print("Invalid book try again")
+                    break
+                valid_input = True
+
+            borrow_id = self.__database.get_borrow_id_by_book_and_user(book_id, user_id)
+
+            if borrow_id is None:
+                print("That book isn't borrowed by you")
                 break
 
             borrow_id = borrow_id[0]
@@ -333,7 +429,8 @@ class MasterApplication(object):
                                "\t2. Use voice search to search a book\n"
                                "\t3. Borrow a book\n"
                                "\t4. Return a book\n"
-                               "\t5. Logout\n\n"
+                               "\t5. Return a book with QR code\n"
+                               "\t6. Logout\n\n"
                                "\nSelect an option: ")
             try:
                 option_selected = int(user_input)
@@ -353,9 +450,12 @@ class MasterApplication(object):
                 self.__return_book(user)
                 option_selected = 6
             elif option_selected == 5:
+                self.__scan_and_return_book(user)
+                option_selected = 6
+            elif option_selected == 6:
                 print("Logging out...")
                 break
-            elif option_selected == 6:
+            elif option_selected == 7:
                 print("\nWrong Input! Try Again...")
 
     def close_connection(self):
