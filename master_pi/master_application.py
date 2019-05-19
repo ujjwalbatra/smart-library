@@ -27,11 +27,7 @@ class MasterApplication(object):
 
         while search_again:
             search_query = input("\nEnter search query: ")
-            search_again = self.__search_book(search_query)
-
-            if search_again is True:
-                print("\nTry again!\n")
-                continue
+            self.__search_book(search_query)
 
             # ask user if want to search again...and repeat again if user presses 1
             user_input = input("\nEnter 1 to search again and any other key to go back to the previous menu: ")
