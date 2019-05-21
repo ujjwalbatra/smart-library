@@ -51,6 +51,7 @@ class MasterApplication(object):
             voice_input = self.__voice_search.get_voice_input("Say the Book Title or author name to search for.")
 
             if voice_input is not None:
+                print("Searching for: {}".format(voice_input))
                 self.__search_book(voice_input)
             else:
                 print("Couldn't understand you. Try again.")
