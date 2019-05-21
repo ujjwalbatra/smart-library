@@ -178,6 +178,12 @@ class MasterApplication(object):
                     continue
                 valid_input = True
 
+            book = self.__database.get_book_by_id(book_id)
+
+            if book is None:
+                print("Book doesn't exist. Please try again.")
+                break
+
             book_already_borrowed = self.__database.book_already_borrowed(book_id, user_id)
 
             if book_already_borrowed:
