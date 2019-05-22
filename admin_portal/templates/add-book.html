@@ -12,12 +12,12 @@
     <title>Smart Library - Add Book</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="../static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="../static/css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -26,56 +26,56 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
 
-     <!-- Sidebar -->
+    <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-cogs"></i>
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard/">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Smart Library</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active">
+            <a class="nav-link" href="/dashboard/">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Dashboard</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Interface
         </div>
-        <div class="sidebar-brand-text mx-3">Smart Library</div>
-      </a>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
+        <!-- Nav Item - add book -->
+        <li class="nav-item">
+            <a class="nav-link" href="/add-book/">
+                <i class="fas fa-fw fa-plus"></i>
+                <span>Add book</span></a>
+        </li>
 
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-      </li>
+        <!-- Nav Item - delete book -->
+        <li class="nav-item">
+            <a class="nav-link" href="/search-book/">
+                <i class="fas fa-fw fa-trash-alt"></i>
+                <span>Remove Book</span></a>
+        </li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider">
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
 
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Interface
-      </div>
-
-      <!-- Nav Item - add book -->
-      <li class="nav-item">
-        <a class="nav-link" href="add-book.html">
-          <i class="fas fa-fw fa-plus"></i>
-          <span>Add book</span></a>
-      </li>
-
-      <!-- Nav Item - delete book -->
-      <li class="nav-item">
-        <a class="nav-link" href="search-book.html">
-          <i class="fas fa-fw fa-trash-alt"></i>
-          <span>Remove Book</span></a>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
 
     </ul>
     <!-- End of Sidebar -->
@@ -133,7 +133,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrator</span>
-                             <i class="fas fa-user fa-2x" style="width: 2rem; margin-left: 15px"></i>
+                            <i class="fas fa-user fa-2x" style="width: 2rem; margin-left: 15px"></i>
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -176,7 +176,8 @@
                                                 <input type="text" class="form-control form-control-user"
                                                        id="isbn" placeholder="ISBN">
                                             </div>
-                                            <div class="card-columns" style="  display: flex;flex-flow: row wrap;align-items: center;">
+                                            <div class="card-columns"
+                                                 style="  display: flex;flex-flow: row wrap;align-items: center;">
                                                 <div class="form-group col-8" style="padding-left: 0">
                                                     <input type="text" class="form-control form-control-user"
                                                            id="publishedDate" onfocus="(this.type='date')"
@@ -189,8 +190,10 @@
                                                 </div>
                                             </div>
 
-                                            <a href="index.html" class="btn btn-primary btn-user btn-block"
-                                               style="margin: auto; width: 200px; margin-top: 20px">
+                                            <a class="btn btn-primary btn-user btn-block"
+                                               href="#" data-toggle="modal"
+                                               data-target="#addBookModal"
+                                               style="width: 200px; margin: 20px auto auto;">
                                                 Add
                                             </a>
                                             <hr>
@@ -212,7 +215,7 @@
         </div>
         <!-- End of Main Content -->
 
-          <!-- Footer -->
+        <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
@@ -248,21 +251,40 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <a class="btn btn-primary" href="/login/">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookAddedLabel">Confirmation!</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Book has been added to the library</div>
+            <div class="modal-footer justify-content-center">
+                <a class="btn btn-primary" style="width: 100px" href="/dashboard/">OK</a>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="../static/vendor/jquery/jquery.min.js"></script>
+<script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="../static/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="../static/js/sb-admin-2.min.js"></script>
 
 </body>
 
