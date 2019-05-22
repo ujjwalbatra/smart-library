@@ -29,6 +29,7 @@ $(document).ready(function () {
              dataType: "json",
              url: url_,
          });
+		window.location = "//192.168.1.103:8080/dashboard/";
         }
     });
 });

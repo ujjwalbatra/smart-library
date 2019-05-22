@@ -106,11 +106,8 @@ def delete_book(id):
     id = id[1:-1]
     print(id)
     if request.method == 'POST':
-
         Book.query.filter(Book.id == id).delete()
         db.session.commit()
-
-    return redirect(url_for("dashboard"))
 
 
 @app.errorhandler(404)
