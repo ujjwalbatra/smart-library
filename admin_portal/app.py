@@ -46,7 +46,7 @@ def dashboard():
     return render_template("dashboard.html")
 
 
-@app.route('/add-book/', methods=["GET"])
+@app.route('/add-book/')
 def add():
     return render_template("add-book.html")
 
