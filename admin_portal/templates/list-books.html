@@ -198,7 +198,8 @@
                                 <tbody>
                                 {% with messages = get_flashed_messages() %}
 				{% if messages | length > 0 %}
-                                {% for message in messages %}
+				{% for message in messages[0] %}
+				
                                 <tr>
                                     <td>{{ message['id'] }}</td>
                                     <td>{{ message['title'] }}</td>
