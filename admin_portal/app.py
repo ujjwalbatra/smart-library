@@ -63,7 +63,7 @@ def add_book_verification():
         except ValueError:
             flash('Invalid Values! Please try again.', 'danger')
             print("value error")
-            return redirect(url_for('add-book'))
+            return render_template("add-book.html")
 
         if title == '' \
                 or isbn == '' \
@@ -79,7 +79,7 @@ def add_book_verification():
             print("success")
             flash('Book {} added'.format(title), 'success')
 
-    return redirect(url_for('add-book'))
+    return render_template("add-book.html")
 
 
 @app.route('/search-book/')
