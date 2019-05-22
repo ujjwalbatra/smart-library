@@ -19,6 +19,8 @@ $(document).ready(function() {
 
     $('#dataTable tbody').on( 'click', 'button', function () {
         var data = table.row( $(this).parents('tr') ).data();
-        console.log(data)
+        if(data[4] !== data[5]) {
+		$("#warningModal").modal()
+	}
     } );
 } );
