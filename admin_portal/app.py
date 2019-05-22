@@ -51,8 +51,8 @@ def add():
     return render_template("add-book.html")
 
 
-@app.route('/add-book-again/', methods=["POST"])
-def add():
+@app.route('/add-book-verification/', methods=["POST"])
+def add_book_verification():
     if request.method == 'POST':
         try:
             title = request.form.get('title')
