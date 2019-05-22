@@ -57,18 +57,11 @@ class QrReader():
 
             time.sleep(1)
 
-        self.__video_stream.stop()
+        self.close()
         return found_codes
 
     @staticmethod
     def __decode_barcode(barcode):
-        """
-        Decodes the binary data retrieved from a barcode into utf-8
-
-        Returns:
-            string: the decoded binary data
-        """
-
         return barcode.data.decode("utf-8")
 
     def close(self):
@@ -76,4 +69,4 @@ class QrReader():
         Releases the camera feed
         """
 
-        self.__video_stream.stop()
+        self.__video_stream.stream.release()
