@@ -36,9 +36,20 @@
                     <div class="row">
                         <img class="col-lg-6 d-none d-lg-block " src="../static/img/iot.jpg">
                         <div class="col-lg-6">
-                            {% if error %}
-                            <p class="text-danger" style="font-size: 20px"><strong>Error:</strong> {{ error }} {% endif
-                                %}
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <!-- Do something with the message -->
+                                        <p class="text-danger"
+                                           style="font-size: 20px;
+                                           margin-left: 20px;
+                                           margin-top: 20px;
+                                           margin-bottom: -20px">
+                                            <strong>Error:</strong> {{ message }}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+
                             <div class="p-5">
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
@@ -61,10 +72,10 @@
                                                placeholder="Password"
                                                value="{{ request.form.password }}">
                                     </div>
-                                    <input  class="btn btn-primary btn-user btn-block"
-                                            type="submit"
-                                            value="Login"
-                                            style="width: 200px; margin: auto">
+                                    <input class="btn btn-primary btn-user btn-block"
+                                           type="submit"
+                                           value="Login"
+                                           style="width: 200px; margin: auto">
 
                                 </form>
 
