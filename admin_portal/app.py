@@ -77,7 +77,7 @@ def add_book_verification():
             db.session.add(new_book)
             db.session.commit()
             print("success")
-            flash('Book {} added'.format(title), 'success')
+            flash('Book Added: {}'.format(title), 'success')
 
     return render_template("add-book.html")
 
