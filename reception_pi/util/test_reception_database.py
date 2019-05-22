@@ -21,8 +21,8 @@ class TestReceptionDatabase(unittest.TestCase):
         self.database.create_table_user()
 
     def countUsers(self):
-            self.cursor.execute("SELECT count(*) FROM user")
-            return self.cursor.fetchone()[0]
+        self.cursor.execute("SELECT count(*) FROM user")
+        return self.cursor.fetchone()[0]
 
     def tearDown(self):
         try:
