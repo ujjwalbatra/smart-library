@@ -8,12 +8,12 @@ $(document).ready(function() {
         "columnDefs": [ {
             "targets": -1,
             "data": null,
-            "defaultContent": "<a href=\"#\" class=\"btn btn-danger btn-icon-split\">\n" +
+            "defaultContent": "<button href=\"#\" class=\"btn btn-danger btn-icon-split\">\n" +
                 "                    <span class=\"icon text-white-50\">\n" +
                 "                      <i class=\"fas fa-trash\"></i>\n" +
                 "                    </span>\n" +
                 "                    <span class=\"text\">Remove</span>\n" +
-                "                  </a>"
+                "                  </button>"
         } ]
     } );
 
