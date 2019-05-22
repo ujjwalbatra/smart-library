@@ -200,13 +200,13 @@
                                 {% if messages %}
                                 {% for message in messages %}
                                 <tr>
-                                    <td>{{ message[0] }}</td>
-                                    <td>{{ message[1] }}</td>
-                                    <td>{{ message[2] }}</td>
-                                    <td>{{ message[3] }}</td>
-                                    <td>{{ message[4] }}</td>
-                                    <td>{{ message[5] }}</td>
-                                    <td>{{ message[6] }}</td>
+                                    <td>{{ message['id'] }}</td>
+                                    <td>{{ message['title'] }}</td>
+                                    <td>{{ message['isbn'] }}</td>
+                                    <td>{{ message['author'] }}</td>
+                                    <td>{{ message['published_year'] }}</td>
+                                    <td>{{ message['total_copies'] }}</td>
+                                    <td>{{ message['copies_available'] }}</td>
                                 </tr>
                                 {% endfor %}
                                 {% endif %}
