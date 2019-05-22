@@ -150,6 +150,19 @@
             </nav>
             <!-- End of Topbar -->
 
+             {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <!-- Do something with the message -->
+                        <p class="text-danger"
+                           style="font-size: 20px;
+                           margin-left: 20px;
+                           margin-top: 20px;
+                           margin-bottom: -20px">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+             {% endwith %}
+
             <!-- Begin Page Content -->
             <div class="container">
 
@@ -208,8 +221,6 @@
                                             </div>
 
                                             <input class="btn btn-primary btn-user btn-block"
-                                                   data-toggle="modal"
-                                                   data-target="#addBookModal"
                                                    type="submit"
                                                    style="width: 200px; margin: 20px auto auto;"
                                                    value="Add">
@@ -274,31 +285,6 @@
     </div>
 </div>
 
-<!-- add book Modal-->
-<div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bookAddedLabel">Confirmation!</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <!-- Do something with the message -->
-                        <div class="modal-body">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            <div class="modal-footer justify-content-center">
-                <a class="btn btn-primary" style="width: 100px" href="/add-book/">OK</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Bootstrap core JavaScript-->
 <script src="../static/vendor/jquery/jquery.min.js"></script>
