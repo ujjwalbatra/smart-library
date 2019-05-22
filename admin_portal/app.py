@@ -58,7 +58,7 @@ def add():
         except ValueError:
             flash('Invalid Values! Please try again.', 'danger')
             print("value error")
-            return redirect(url_for('add-book'))
+            return render_template("add-book.html")
 
         if title == '' \
                 or isbn == '' \
@@ -67,14 +67,14 @@ def add():
 
             flash('Invalid Values! Please try again.', 'danger')
             print("invalid values")
-            return redirect(url_for('add-book'))
+            return render_template("add-book.html")
         else:
             new_book = Book(title, isbn, published_date, author, total_copies)
             db.session.add(new_book)
             db.session.commit()
             print("success")
             flash('Book {} added'.format(title), 'success')
-            return redirect(url_for('add-book'))
+            return render_template("add-book.html")
     else:
         return render_template("add-book.html")
 
