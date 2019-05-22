@@ -85,11 +85,11 @@ def search():
     if request.method == 'POST':
         query = request.form.get('query')
         result = Book.query.with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
-                                                   Book.total_copies, Book.copies_available). \
+                                          Book.total_copies, Book.copies_available). \
             filter(Book.id == query). \
-            filter(Book.title.like("%{}%".format(query))). \
-            filter(Book.author.like("%{}%".format(query))). \
-            filter(Book.isbn.like("%{}%".format(query)))
+            filter(Book.title.like("%{}%".format(query)) |
+                   Book.author.like("%{}%".format(query)) |
+                   Book.isbn.like("%{}%".format(query))).all()
 
         result = jsonify(BookSchema.dump(result))
 
