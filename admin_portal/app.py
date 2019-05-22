@@ -34,10 +34,6 @@ def check_credentials():
 
 @app.route('/login/')
 def login():
-    books = Book.query.all()
-
-    for book in books:
-        print(book.title)
     return render_template('login.html')
 
 
@@ -51,7 +47,7 @@ def add():
     return render_template("add-book.html")
 
 
-@app.route('/add-book-verification/', methods=["POST"])
+@app.route('/add-book-verification/', methods=["POST", "GET"])
 def add_book_verification():
     if request.method == 'POST':
         try:
@@ -62,7 +58,6 @@ def add_book_verification():
             total_copies = int(request.form.get('totalCopies'))
         except ValueError:
             flash('Invalid Values! Please try again.', 'danger')
-            print("value error")
             return render_template("add-book.html")
 
         if title == '' \
@@ -71,20 +66,33 @@ def add_book_verification():
                 or total_copies < 0:
 
             flash('Invalid Values! Please try again.', 'danger')
-            print("invalid values")
         else:
             new_book = Book(title, isbn, published_date, author, total_copies)
             db.session.add(new_book)
             db.session.commit()
-            print("success")
             flash('Book Added-- {}'.format(title), 'success')
 
     return render_template("add-book.html")
 
 
 @app.route('/search-book/')
-def search():
+def search_book():
     return render_template("search-book.html")
+
+
+@app.route('/search/', methods=["POST", "GET"])
+def search():
+    if request.method == 'POST':
+        query = request.form.get('query')
+        result = session.query(Book).with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
+                                                   Book.total_copies, Book.copies_available). \
+            filter(Book.id == query). \
+            filter(Book.title.like("%{}%".format(query))). \
+            filter(Book.author.like("%{}%".format(query))). \
+            filter(Book.isbn.like("%{}%".format(query)))
+
+        flash(result)
+    return redirect('/list-books/')
 
 
 @app.route('/list-books/')

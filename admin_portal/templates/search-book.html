@@ -27,56 +27,56 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
 
-      <!-- Sidebar -->
+    <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard/">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-cogs"></i>
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard/">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <i class="fas fa-cogs"></i>
+            </div>
+            <div class="sidebar-brand-text mx-3">Smart Library</div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active">
+            <a class="nav-link" href="/dashboard/">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Dashboard</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Interface
         </div>
-        <div class="sidebar-brand-text mx-3">Smart Library</div>
-      </a>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
+        <!-- Nav Item - add book -->
+        <li class="nav-item">
+            <a class="nav-link" href="/add-book/">
+                <i class="fas fa-fw fa-plus"></i>
+                <span>Add book</span></a>
+        </li>
 
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="/dashboard/">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-      </li>
+        <!-- Nav Item - delete book -->
+        <li class="nav-item">
+            <a class="nav-link" href="/search-book/">
+                <i class="fas fa-fw fa-trash-alt"></i>
+                <span>Remove Book</span></a>
+        </li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider">
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
 
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Interface
-      </div>
-
-       <!-- Nav Item - add book -->
-      <li class="nav-item">
-        <a class="nav-link" href="/add-book/">
-          <i class="fas fa-fw fa-plus"></i>
-          <span>Add book</span></a>
-      </li>
-
-      <!-- Nav Item - delete book -->
-      <li class="nav-item">
-        <a class="nav-link" href="/search-book/">
-          <i class="fas fa-fw fa-trash-alt"></i>
-          <span>Remove Book</span></a>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
 
     </ul>
     <!-- End of Sidebar -->
@@ -163,17 +163,19 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Remove a book from the Smart Library!</h1>
                                 </div>
-                                <form class="user">
+                                <form class="user" method="POST" action="/search/">
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user"
-                                               id="title" aria-describedby="title"
+                                        <input type="text"
+                                               class="form-control form-control-user"
+                                               id="query"
+                                               name="query"
+                                               aria-describedby="query"
                                                placeholder="Title/ISBN/Author name">
                                     </div>
 
-                                    <a href="/list-books/" class="btn btn-primary btn-user btn-block"
-                                       style="width: 200px; margin: auto;">
-                                        Search
-                                    </a>
+                                    <input class="btn btn-primary btn-user btn-block"
+                                           value="Search"
+                                           style="width: 200px; margin: auto;"/>
                                     <hr>
 
                                 </form>
