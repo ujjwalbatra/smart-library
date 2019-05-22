@@ -103,6 +103,8 @@ def list_books():
 
 @app.route('/delete-book/<id>', methods=["POST"])
 def delete_book(id):
+    id = id[1:-1]
+    print(id)
     if request.method == 'POST':
 
         Book.query.filter(Book.id == id).delete()
