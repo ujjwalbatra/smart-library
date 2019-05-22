@@ -92,7 +92,6 @@ def search():
         result = book_schema.dump(result).data
 
         flash(result)
-        print(result)
     return redirect('/list-books/')
 
 

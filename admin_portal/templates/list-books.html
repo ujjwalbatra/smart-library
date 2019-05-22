@@ -96,14 +96,20 @@
                 </button>
 
                 <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+                      method="POST" action="/search/">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                               aria-label="Search" aria-describedby="basic-addon2">
+                        <input type="text"
+                               id="search"
+                               name="search"
+                               class="form-control bg-light border-0 small"
+                               placeholder="Search for..."
+                               aria-label="Search"
+                               aria-describedby="basic-addon2">
                         <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
+                            <input class="btn btn-primary" type="submit">
+                            <i class="fas fa-search fa-sm"></i>
+                            </input>
                         </div>
                     </div>
                 </form>
@@ -197,9 +203,9 @@
                                 </tfoot>
                                 <tbody>
                                 {% with messages = get_flashed_messages() %}
-				{% if messages | length > 0 %}
-				{% for message in messages[0] %}
-				
+                                {% if messages | length > 0 %}
+                                {% for message in messages[0] %}
+
                                 <tr>
                                     <td>{{ message['id'] }}</td>
                                     <td>{{ message['title'] }}</td>
@@ -208,7 +214,7 @@
                                     <td>{{ message['published_year'] }}</td>
                                     <td>{{ message['total_copies'] }}</td>
                                     <td>{{ message['copies_available'] }}</td>
-                                     <td>{{ message['id'] }}</td>
+                                    <td>{{ message['id'] }}</td>
                                 </tr>
                                 {% endfor %}
                                 {% endif %}
