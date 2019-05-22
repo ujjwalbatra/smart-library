@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_session import Session
 from configuration import db, ma, app, api, site
 from models import Book, BookSchema
+from sqlalchemy import or_
 
 sess = Session()
 
@@ -86,12 +87,11 @@ def search():
         query = request.form.get('query')
         result = Book.query.with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
                                           Book.total_copies, Book.copies_available). \
-            filter(Book.id == query). \
-            filter(Book.title.like("%{}%".format(query)) |
-                   Book.author.like("%{}%".format(query)) |
-                   Book.isbn.like("%{}%".format(query))).all()
-
-        result = jsonify(BookSchema.dump(result))
+            filter(or_(Book.id.like("%" + query + "%"), Book.title.like("%" + query + "%"), Book.author.like("%" + query + "%"), Book.isbn.like("%" + query + "%"))).all()
+       
+        print(result)
+        book_schema = BookSchema(many=True)
+        result = book_schema.dump(result).data
 
         flash(result)
     return redirect('/list-books/')
