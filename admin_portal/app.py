@@ -84,7 +84,7 @@ def search_book():
 def search():
     if request.method == 'POST':
         query = request.form.get('query')
-        result = session.query(Book).with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
+        result = Book.query.with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
                                                    Book.total_copies, Book.copies_available). \
             filter(Book.id == query). \
             filter(Book.title.like("%{}%".format(query))). \
