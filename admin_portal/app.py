@@ -86,8 +86,9 @@ def search():
         query = request.form.get('query')
         result = Book.query.with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
                                           Book.total_copies, Book.copies_available). \
-            filter(or_(Book.id.like("%" + query + "%"), Book.title.like("%" + query + "%"), Book.author.like("%" + query + "%"), Book.isbn.like("%" + query + "%"))).all()
-       
+            filter(or_(Book.id.like("%" + query + "%"), Book.title.like("%" + query + "%"),
+                       Book.author.like("%" + query + "%"), Book.isbn.like("%" + query + "%"))).all()
+
         book_schema = BookSchema(many=True)
         result = book_schema.dump(result).data
 
@@ -98,6 +99,16 @@ def search():
 @app.route('/list-books/')
 def list_books():
     return render_template("list-books.html")
+
+
+@app.route('/delete-book/<id>', methods=["POST"])
+def delete_book(id):
+    if request.method == 'POST':
+
+        Book.query.filter(Book.id == id).delete()
+        db.session.commit()
+
+    return redirect(url_for("dashboard"))
 
 
 @app.errorhandler(404)
