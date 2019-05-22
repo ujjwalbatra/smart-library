@@ -204,10 +204,12 @@
                                             <div class="card-columns"
                                                  style="  display: flex;flex-flow: row wrap;align-items: center;">
                                                 <div class="form-group col-8" style="padding-left: 0">
-                                                    <input type="text"
+                                                    <input type="number"
                                                            class="form-control form-control-user"
                                                            id="publishedDate"
-                                                           onfocus="(this.type='date')"
+							   min="1900" 
+	  						   max="2099" 
+		    			                   step="1"
                                                            placeholder="Published Date">
                                                 </div>
 
