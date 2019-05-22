@@ -1,10 +1,10 @@
 import json
 import os
 
-from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, jsonify
 from flask_session import Session
 from configuration import db, ma, app, api, site
-from models import Book
+from models import Book, BookSchema
 
 sess = Session()
 
@@ -90,6 +90,8 @@ def search():
             filter(Book.title.like("%{}%".format(query))). \
             filter(Book.author.like("%{}%".format(query))). \
             filter(Book.isbn.like("%{}%".format(query)))
+
+        result = jsonify(BookSchema.dump(result))
 
         flash(result)
     return redirect('/list-books/')

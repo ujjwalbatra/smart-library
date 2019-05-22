@@ -1,4 +1,4 @@
-from configuration import db
+from configuration import db, ma
 from sqlalchemy import ForeignKey, Enum
 
 
@@ -37,3 +37,12 @@ class BorrowRecord(db.Model):
     issue_date = db.Column(db.DateTime, nullable=False)
     return_date = db.Column(db.DateTime)
     actual_return_date = db.Column(db.DateTime)
+
+
+class BookSchema(ma.Schema):
+    def __init__(self, strict=True, **kwargs):
+        super().__init__(strict=strict, **kwargs)
+
+    class Meta:
+        # Fields to expose.
+        fields = ("id", "title", "isbn", "published_year", "author", "total_copies", "copies_available")
