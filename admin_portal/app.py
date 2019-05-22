@@ -1,12 +1,17 @@
 import json
-
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_session import Session
+from flask_api import api, db
+from flask_site import site
+from configuration import db, ma, app
+from models import Book
 
-app = Flask(__name__)
-app.config['SESSION_TYPE'] = 'memcached'
-app.config['SECRET_KEY'] = 'super secret key'
 sess = Session()
+
+db.init_app(app)
+
+app.register_blueprint(api)
+app.register_blueprint(site)
 
 
 @app.route('/')
@@ -29,6 +34,8 @@ def check_credentials():
 
 @app.route('/login/')
 def login():
+    books = Book.query.all()
+    print(books)
     return render_template('login.html')
 
 
@@ -58,4 +65,4 @@ def page_not_found():
 
 
 if __name__ == '__main__':
-    app.run(port=8080, host='0.0.0.0')
+    app.run()

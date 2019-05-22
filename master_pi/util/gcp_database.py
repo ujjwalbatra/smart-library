@@ -49,8 +49,8 @@ class GcpDatabase:
 
         self.__cursor.execute('''CREATE TABLE IF NOT EXISTS borrow_record (id INT PRIMARY KEY AUTO_INCREMENT, 
                                     user_id INT NOT NULL, book_id INT NOT NULL, status enum ('borrowed', 'returned'), 
-                                    issue_date DATE NOT NULL,
-                                    return_date DATE, actual_return_date DATE DEFAULT NULL,
+                                    issue_date DATETIME NOT NULL,
+                                    return_date DATETIME, actual_return_date DATETIME DEFAULT NULL,
                                     FOREIGN KEY (book_id) REFERENCES book(id),
                                     FOREIGN KEY (user_id) REFERENCES user(id));''')
 
