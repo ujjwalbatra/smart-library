@@ -182,7 +182,7 @@
                                             <h1 class="h4 text-gray-900 mb-4">Add a book to the Smart Library!</h1>
                                         </div>
                                         <form class="user">
-                                            <div class="form-group" method="POST" action="/add-book/">
+                                            <div class="form-group" method="POST" action="{{ url_for('add-book') }}">
                                                 <input type="text"
                                                        class="form-control form-control-user"
                                                        id="title"
