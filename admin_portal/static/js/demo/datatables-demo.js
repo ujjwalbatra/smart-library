@@ -19,6 +19,6 @@ $(document).ready(function() {
 
     $('#dataTable tbody').on( 'click', 'button', function () {
         var data = table.row( $(this).parents('tr') ).data();
-        // alert( data[0] +"'s salary is: "+ data[ 5 ] );
+        console.log(data)
     } );
 } );
