@@ -197,7 +197,7 @@
                                 </tfoot>
                                 <tbody>
                                 {% with messages = get_flashed_messages() %}
-                                {% if messages %}
+				{% if messages | length > 0 %}
                                 {% for message in messages %}
                                 <tr>
                                     <td>{{ message['id'] }}</td>

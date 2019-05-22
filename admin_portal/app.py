@@ -1,6 +1,5 @@
 import json
 import os
-
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, jsonify
 from flask_session import Session
 from configuration import db, ma, app, api, site
@@ -89,11 +88,11 @@ def search():
                                           Book.total_copies, Book.copies_available). \
             filter(or_(Book.id.like("%" + query + "%"), Book.title.like("%" + query + "%"), Book.author.like("%" + query + "%"), Book.isbn.like("%" + query + "%"))).all()
        
-        print(result)
         book_schema = BookSchema(many=True)
         result = book_schema.dump(result).data
 
         flash(result)
+        print(result)
     return redirect('/list-books/')
 
 
