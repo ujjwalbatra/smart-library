@@ -161,10 +161,10 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
+			    	   <th>id</th>
                                     <th>Title</th>
                                     <th>ISBN</th>
                                     <th>Author(s)</th>
-                                    <th>Published Date</th>
                                     <th>Total copies</th>
                                     <th>Available copies</th>
                                     <th>Remove</th>
@@ -172,10 +172,10 @@
                                 </thead>
                                 <tfoot>
                                 <tr>
+				    <th>id</th>	
                                     <th>Title</th>
                                     <th>ISBN</th>
                                     <th>Author(s)</th>
-                                    <th>Published Date</th>
                                     <th>Total copies</th>
                                     <th>Available copies</th>
                                     <th>Remove</th>
@@ -187,13 +187,13 @@
                                 {% for message in messages[0] %}
 
                                 <tr>
+                                    <td>{{ message['id'] }}</td>
                                     <td>{{ message['title'] }}</td>
                                     <td>{{ message['isbn'] }}</td>
                                     <td>{{ message['author'] }}</td>
-                                    <td>{{ message['published_year'] }}</td>
                                     <td>{{ message['total_copies'] }}</td>
                                     <td>{{ message['copies_available'] }}</td>
-				    <td>{{ messages['id'] }}</td>
+				    <td>{{ messages['published_year'] }}</td>
                                 </tr>
                                 {% endfor %}
                                 {% endif %}
