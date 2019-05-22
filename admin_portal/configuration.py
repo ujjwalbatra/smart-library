@@ -1,10 +1,8 @@
 import os
-from flask_api import api, db
-from flask import Flask
+from flask import Flask, Blueprint
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flask_site import site
 
 app = Flask(__name__)
 
@@ -17,7 +15,12 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://{}:{}@{}/{}".format("root",
                                                                      "SmartLibrary")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
+db = SQLAlchemy()
+
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+api = Blueprint("api", __name__)
+site = Blueprint("site", __name__)
 
 db.init_app(app)
 app.register_blueprint(api)

@@ -1,9 +1,7 @@
 import json
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_session import Session
-from flask_api import api, db
-from flask_site import site
-from configuration import db, ma, app
+from configuration import db, ma, app, api, site
 from models import Book
 
 sess = Session()
