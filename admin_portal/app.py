@@ -53,10 +53,11 @@ def add():
             title = request.form.get('title')
             isbn = request.form.get('isbn')
             published_date = int(request.form.get('publishedDate'))
-            author = int(request.form.get('author'))
+            author = request.form.get('author')
             total_copies = int(request.form.get('totalCopies'))
         except ValueError:
             flash('Invalid Values! Please try again.', 'danger')
+            print("value error")
             return redirect(url_for('add-book'))
 
         if title == '' \
@@ -65,12 +66,13 @@ def add():
                 or total_copies < 0:
 
             flash('Invalid Values! Please try again.', 'danger')
+            print("invalid values")
             return redirect(url_for('add-book'))
         else:
             new_book = Book(title, isbn, published_date, author, total_copies)
             db.session.add(new_book)
             db.session.commit()
-
+            print("success")
             flash('Book {} added'.format(title), 'success')
             return redirect(url_for('add-book'))
     else:
