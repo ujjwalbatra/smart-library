@@ -12,6 +12,14 @@ class Book(db.Model):
     total_copies = db.Column(db.Integer, default=1)
     copies_available = db.Column(db.Integer, default=1)
 
+    def __init__(self, title, isbn, published_year, author, total_copies):
+        self.title = title
+        self.isbn = isbn
+        self.published_year = published_year
+        self.author = author
+        self.total_copies = total_copies
+        self.copies_available = total_copies
+
 
 class User(db.Model):
     __tablename__ = 'user'
