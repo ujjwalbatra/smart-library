@@ -16,14 +16,14 @@ app.register_blueprint(site)
 
 @app.route('/')
 def homepage():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
     return redirect(url_for(dashboard))
 
 
 @app.route('/check-credentials/', methods=["POST"])
 def check_credentials():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
     error = None
     if request.method == 'POST':
@@ -38,13 +38,13 @@ def check_credentials():
 
 @app.route('/login/')
 def login():
-    sess['authenticated'] = True
+    session['authenticated'] = True
     return render_template('login.html')
 
 
 @app.route('/dashboard/')
 def dashboard():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
 
     return render_template("dashboard.html")
@@ -52,14 +52,14 @@ def dashboard():
 
 @app.route('/add-book/')
 def add():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
     return render_template("add-book.html")
 
 
 @app.route('/add-book-verification/', methods=["POST", "GET"])
 def add_book_verification():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
@@ -90,7 +90,7 @@ def add_book_verification():
 
 @app.route('/search-book/')
 def search_book():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
 
     return render_template("search-book.html")
@@ -98,7 +98,7 @@ def search_book():
 
 @app.route('/search/', methods=["POST", "GET"])
 def search():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
@@ -117,7 +117,7 @@ def search():
 
 @app.route('/list-books/')
 def list_books():
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
 
     return render_template("list-books.html")
@@ -134,7 +134,7 @@ def logout():
 @app.route('/delete-book/<id>', methods=["POST"])
 def delete_book(id):
 
-    if sess['authenticated'] is not True:
+    if session['authenticated'] is not True:
         return redirect(url_for('login'))
 
     # remove triangular brackets that comes with the request
