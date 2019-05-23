@@ -1,5 +1,5 @@
 from configuration import db, ma
-from sqlalchemy import ForeignKey, Enum
+from sqlalchemy import ForeignKey, Enum, or_
 
 
 class Book(db.Model):
@@ -23,6 +23,16 @@ class Book(db.Model):
     def add_book(self):
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def query_book(query):
+        result = Book.query.with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
+                                          Book.total_copies, Book.copies_available). \
+            filter(or_(Book.id.like("%" + query + "%"), Book.title.like("%" + query + "%"),
+                       Book.author.like("%" + query + "%"), Book.isbn.like("%" + query + "%"))).all()
+
+        book_schema = BookSchema(many=True)
+        return book_schema.dump(result).data
 
 
 class User(db.Model):

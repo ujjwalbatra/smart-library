@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_session import Session
 from configuration import db, ma, app, api, site
 from models import Book, BookSchema
-from sqlalchemy import or_
+
 
 sess = Session()
 
@@ -119,14 +119,7 @@ def search():
 
     if request.method == 'POST':
         query = request.form.get('query')
-        result = Book.query.with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
-                                          Book.total_copies, Book.copies_available). \
-            filter(or_(Book.id.like("%" + query + "%"), Book.title.like("%" + query + "%"),
-                       Book.author.like("%" + query + "%"), Book.isbn.like("%" + query + "%"))).all()
-
-        book_schema = BookSchema(many=True)
-        result = book_schema.dump(result).data
-
+        result = Book.query_book(query)
         flash(result)
     return redirect('/list-books/')
 
