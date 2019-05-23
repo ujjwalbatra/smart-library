@@ -29,7 +29,7 @@ def check_credentials():
 
     error = None
     if request.method == 'POST':
-        if request.form.get('username', None) != 'admin' or request.form.get('password', None) != 'admin':
+        if request.form.get('username', None) != 'jaqen' or request.form.get('password', None) != 'hghar':
             error = 'Invalid Credentials! Please try again.'
         else:
             session['authenticated'] = True
