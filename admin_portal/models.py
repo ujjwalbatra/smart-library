@@ -82,9 +82,9 @@ class BorrowRecord(db.Model):
 
         result = {
             "books_borrowed_today": books_borrowed_today,
-            "books_returned_today ": books_returned_today,
-            "books_borrowed_this_week ": books_borrowed_this_week,
-            "books_returned_this_week ": books_returned_this_week
+            "books_returned_today": books_returned_today,
+            "books_borrowed_this_week": books_borrowed_this_week,
+            "books_returned_this_week": books_returned_this_week
         }
 
         return result
