@@ -65,19 +65,19 @@ class BorrowRecord(db.Model):
         last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 
         books_borrowed_today = db.session.query(). \
-            filter(BorrowRecord.id.status == MyEnum.borrowed). \
+            filter(BorrowRecord.status == MyEnum.borrowed). \
             filter(BorrowRecord.issue_date.like(today)).count()
 
         books_returned_today = db.session.query(). \
-            filter(BorrowRecord.id.status == MyEnum.returned). \
+            filter(BorrowRecord.status == MyEnum.returned). \
             filter(BorrowRecord.actual_return_date.like(today)).count()
 
         books_borrowed_this_week = db.session.query(BorrowRecord.id). \
-            filter(BorrowRecord.id.status == MyEnum.returned). \
+            filter(BorrowRecord.status == MyEnum.returned). \
             filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
 
         books_returned_this_week = db.session.query(BorrowRecord.id). \
-            filter(BorrowRecord.id.status == "returned"). \
+            filter(BorrowRecord.status == "returned"). \
             filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
 
         result = {
