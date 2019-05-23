@@ -89,6 +89,48 @@ class BorrowRecord(db.Model):
 
         return result
 
+    @staticmethod
+    def get_graph_data():
+        dates = []
+        count = []
+
+        result = {"borrowed": None, "returned": None}
+
+        for i in range(0, 7):
+            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=7)
+            dates.append(dynamic_date.date().__str__())
+
+            books_borrowed = db.session.query(BorrowRecord). \
+                filter(BorrowRecord.status == MyEnum.borrowed). \
+                filter(BorrowRecord.actual_return_date.like(dynamic_date)).count()
+
+            count.append(books_borrowed)
+
+        result["borrowed"] = {
+            "dates": dates,
+            "count": count
+        }
+
+        dates = []
+        count = []
+
+        for i in range(0, 7):
+            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=7)
+            dates.append(dynamic_date.date().__str__())
+
+            books_borrowed = db.session.query(BorrowRecord). \
+                filter(BorrowRecord.status == MyEnum.returned). \
+                filter(BorrowRecord.actual_return_date.like(dynamic_date)).count()
+
+            count.append(books_borrowed)
+
+        result["returned"] = {
+            "dates": dates,
+            "count": count
+        }
+
+        return result
+
 
 class BookSchema(ma.Schema):
     def __init__(self, strict=True, **kwargs):

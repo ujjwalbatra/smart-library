@@ -5,7 +5,6 @@ from flask_session import Session
 from configuration import db, ma, app, api, site
 from models import Book, BookSchema, BorrowRecord
 
-
 sess = Session()
 
 db.init_app(app)
@@ -26,7 +25,6 @@ def homepage():
 
 @app.route('/check-credentials/', methods=["POST"])
 def check_credentials():
-
     error = None
     if request.method == 'POST':
         if request.form.get('username', None) != 'jaqen' or request.form.get('password', None) != 'hghar':
@@ -56,7 +54,13 @@ def dashboard():
         return redirect(url_for('login'))
 
     stats = BorrowRecord.get_stats()
-    return render_template("dashboard.html", stats=stats)
+    graph_data = BorrowRecord.get_graph_data()
+
+    result = {
+        "graph": graph_data,
+        "count": stats
+    }
+    return render_template("dashboard.html", stats=result)
 
 
 @app.route('/add-book/')
@@ -133,6 +137,12 @@ def list_books():
         return redirect(url_for('login'))
 
     return render_template("list-books.html")
+
+
+@app.route('/get-data/')
+def get_data():
+    result = BorrowRecord.get_graph_data()
+    return result
 
 
 @app.route('/delete-book/<id>', methods=["POST"])
