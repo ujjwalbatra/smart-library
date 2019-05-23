@@ -26,10 +26,6 @@ def homepage():
 
 @app.route('/check-credentials/', methods=["POST"])
 def check_credentials():
-    if "authenticated" not in session:
-        return redirect(url_for('login'))
-    elif session['authenticated'] is not True:
-        return redirect(url_for('login'))
 
     error = None
     if request.method == 'POST':
@@ -37,6 +33,7 @@ def check_credentials():
             error = 'Invalid Credentials! Please try again.'
         else:
             session['authenticated'] = True
+
             return redirect(url_for('dashboard'))
 
     flash(error, 'danger')
