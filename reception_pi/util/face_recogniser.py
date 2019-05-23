@@ -4,9 +4,9 @@ Part of the face recognition util, responsible for recognising faces
 
 import pickle
 import time
+import imutils
 from imutils.video import VideoStream
 import face_recognition
-import imutils
 import cv2
 
 class FaceRecogniser():
