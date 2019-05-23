@@ -1,5 +1,5 @@
 from configuration import db, ma
-from sqlalchemy import ForeignKey, Enum, or_, and_
+from sqlalchemy import ForeignKey, Enum, or_, and_, func
 import datetime
 import enum
 
@@ -102,7 +102,7 @@ class BorrowRecord(db.Model):
 
             books_borrowed = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.borrowed). \
-                filter(BorrowRecord.issue_date.like("%" + dynamic_date + "%")).count()
+                filter(func.DATE(BorrowRecord.issue_date).like(dynamic_date)).count()
 
             count.append(books_borrowed)
 
@@ -120,7 +120,7 @@ class BorrowRecord(db.Model):
 
             books_borrowed = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.returned). \
-                filter(BorrowRecord.actual_return_date.like("%" + dynamic_date + "%")).count()
+                filter(func.DATE(BorrowRecord).actual_return_date.like(dynamic_date)).count()
 
             count.append(books_borrowed)
 
