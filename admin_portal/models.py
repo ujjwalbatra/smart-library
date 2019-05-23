@@ -1,5 +1,6 @@
 from configuration import db, ma
-from sqlalchemy import ForeignKey, Enum, or_
+from sqlalchemy import ForeignKey, Enum, or_, and_
+import datetime
 
 
 class Book(db.Model):
@@ -34,15 +35,6 @@ class Book(db.Model):
         book_schema = BookSchema(many=True)
         return book_schema.dump(result).data
 
-    @staticmethod
-    def get_stats():
-        result = Book.query.filter(Book.id.status("borrowed")).all()
-
-        # session.query(MyTable.col1).count()
-
-        book_schema = BookSchema(many=True)
-        return book_schema.dump(result).data
-
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -60,6 +52,37 @@ class BorrowRecord(db.Model):
     issue_date = db.Column(db.DateTime, nullable=False)
     return_date = db.Column(db.DateTime)
     actual_return_date = db.Column(db.DateTime)
+
+    @staticmethod
+    def get_stats():
+        today = datetime.datetime.now().__str__()
+        last_week = datetime.datetime.now() - datetime.timedelta(days=7)
+
+        books_borrowed_today = BorrowRecord.query(BorrowRecord.id). \
+            filter(BorrowRecord.id.status.like("borrowed")). \
+            filter(BorrowRecord.issue_date.like(today)).count()
+
+        books_returned_today = BorrowRecord.query(BorrowRecord.id). \
+            filter(BorrowRecord.id.status.like("returned")). \
+            filter(BorrowRecord.actual_return_date.like(today)).count()
+
+        books_borrowed_this_week = BorrowRecord.query(BorrowRecord.id). \
+            filter(BorrowRecord.id.status.like("borrowed")). \
+            filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
+
+        books_returned_this_week = BorrowRecord.query(BorrowRecord.id). \
+            filter(BorrowRecord.id.status.like("returned")). \
+            filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
+
+        result = {
+            "books_borrowed_today": books_borrowed_today,
+            "books_returned_today ": books_returned_today,
+            "books_borrowed_this_week ": books_borrowed_this_week,
+            "books_returned_this_week ": books_returned_this_week
+        }
+
+        book_record_schema = BorrowRecordSchema(many=True)
+        return book_record_schema.dump(result).data
 
 
 class BookSchema(ma.Schema):

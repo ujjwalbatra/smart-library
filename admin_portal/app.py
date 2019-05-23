@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, jsonify
 from flask_session import Session
 from configuration import db, ma, app, api, site
-from models import Book, BookSchema
+from models import Book, BookSchema, BorrowRecord
 
 
 sess = Session()
@@ -54,8 +54,9 @@ def dashboard():
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
         return redirect(url_for('login'))
-    book = Book.get_stats()
-    return render_template("dashboard.html")
+
+    stats = BorrowRecord.get_stats()
+    return render_template("dashboard.html", stats=json.loads(stats))
 
 
 @app.route('/add-book/')

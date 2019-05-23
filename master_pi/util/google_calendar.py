@@ -74,6 +74,3 @@ class GoogleCalendar(object):
         }
 
         self.__service.events().insert(calendarId='primary', body=event).execute()
-
-if __name__ == '__main__':
-
