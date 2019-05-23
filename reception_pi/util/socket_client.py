@@ -1,3 +1,7 @@
+"""
+Provides the SocketClient class for communicating with master pi
+"""
+
 import json
 import socket
 import logging
@@ -8,6 +12,10 @@ logging.basicConfig(filename="./reception_pi/logs/reception-application.log", fi
 
 
 class SocketClient():
+    """
+    Can send strings to a socket server and recieve responses
+    """
+
     CONFIG_FILE = 'reception_pi/config.json'
 
     def __init__(self):
