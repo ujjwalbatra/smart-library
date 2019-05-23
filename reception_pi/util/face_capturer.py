@@ -1,8 +1,16 @@
-import cv2
+"""
+Part of the face recognition util, captures images of a user's face
+"""
+
 import os
-import argparse
+import cv2
+
 
 class FaceCapturer():
+    """
+    Catures an image of a users face and stores it in the dataset directory
+    """
+
     def __init__(self):
         self.__dataset = 'dataset'
         self.__user = ''
@@ -10,6 +18,13 @@ class FaceCapturer():
         self.__camera = None
 
     def capture_user_face(self, user):
+        """
+        Captures and saves an image of the users face, cropped using face detection
+
+        Args:
+            user: name of the user to save image under
+        """
+
         folder = "./{}/{}".format(self.__dataset, user)
 
         # Create a new folder for the new name
@@ -25,18 +40,18 @@ class FaceCapturer():
             key = input("Press q to quit or ENTER to continue: ")
             if key == "q":
                 break
-            
-            ret, frame = cam.read()
+
+            ret, frame = self.__camera.read()
             if not ret:
                 break
-            
+
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_detector.detectMultiScale(gray, 1.3, 5)
 
-            if(len(faces) == 0):
+            if faces:
                 print("No face detected, please try again")
                 continue
-            
+
             for (x, y, w, h) in faces:
                 img_name = "{}/{:04}.jpg".format(folder, img_counter)
                 cv2.imwrite(img_name, frame[y : y + h, x : x + w])
@@ -46,6 +61,10 @@ class FaceCapturer():
         self.close()
 
     def close(self):
+        """
+        Releases the camera feed
+        """
+
         self.__camera.release()
 
     def __start_camera(self):
