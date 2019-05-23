@@ -58,19 +58,19 @@ class BorrowRecord(db.Model):
         today = datetime.datetime.now().__str__()
         last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 
-        books_borrowed_today = BorrowRecord.query(BorrowRecord.id). \
+        books_borrowed_today = db.session.query(). \
             filter(BorrowRecord.id.status.like("borrowed")). \
             filter(BorrowRecord.issue_date.like(today)).count()
 
-        books_returned_today = BorrowRecord.query(BorrowRecord.id). \
+        books_returned_today = db.session.query(). \
             filter(BorrowRecord.id.status.like("returned")). \
             filter(BorrowRecord.actual_return_date.like(today)).count()
 
-        books_borrowed_this_week = BorrowRecord.query(BorrowRecord.id). \
+        books_borrowed_this_week = db.session.query(BorrowRecord.id). \
             filter(BorrowRecord.id.status.like("borrowed")). \
             filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
 
-        books_returned_this_week = BorrowRecord.query(BorrowRecord.id). \
+        books_returned_this_week = db.session.query(BorrowRecord.id). \
             filter(BorrowRecord.id.status.like("returned")). \
             filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
 
