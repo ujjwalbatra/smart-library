@@ -97,12 +97,12 @@ class BorrowRecord(db.Model):
         result = {"borrowed": None, "returned": None}
 
         for i in range(0, 7):
-            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=i)
-            dates.append(dynamic_date.date().__str__())
+            dynamic_date = datetime.date.today() - datetime.timedelta(days=i)
+            dates.append(dynamic_date.__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.borrowed). \
-                filter(BorrowRecord.actual_return_date.like(dynamic_date)).count()
+                filter(BorrowRecord.issue_date.like("%" + dynamic_date + "%")).count()
 
             count.append(books_borrowed)
 
@@ -120,7 +120,7 @@ class BorrowRecord(db.Model):
 
             books_borrowed = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.returned). \
-                filter(BorrowRecord.actual_return_date.like(dynamic_date)).count()
+                filter(BorrowRecord.actual_return_date.like("%" + dynamic_date + "%")).count()
 
             count.append(books_borrowed)
 
