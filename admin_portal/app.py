@@ -54,13 +54,8 @@ def dashboard():
         return redirect(url_for('login'))
 
     stats = BorrowRecord.get_stats()
-    graph_data = BorrowRecord.get_graph_data()
 
-    result = {
-        "graph": graph_data,
-        "count": stats
-    }
-    return render_template("dashboard.html", stats=result)
+    return render_template("dashboard.html", stats=stats)
 
 
 @app.route('/add-book/')
