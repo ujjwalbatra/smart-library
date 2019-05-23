@@ -17,14 +17,12 @@ $(document).ready(function () {
         }]
     });
 
-
     $('#dataTable tbody').on('click', 'button', function () {
-
         var data = table.row($(this).parents('tr')).data();
         if (data[4] !== data[5]) {
             $("#warningModal").modal()
         } else {
-            url_ = "http://192.168.1.100/delete-book/<" + data[0] + ">"
+            url_ = "http://192.168.1.100:8080/delete-book/<" + data[0] + ">"
             $.ajax({
                 type: "POST",
                 dataType: "json",
