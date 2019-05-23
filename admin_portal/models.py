@@ -78,7 +78,7 @@ class BorrowRecord(db.Model):
 
         books_returned_this_week = db.session.query(BorrowRecord). \
             filter(BorrowRecord.status == "returned"). \
-            filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
+            filter(and_(BorrowRecord.actual_return_date <= today, BorrowRecord.actual_return_date >= last_week)).count()
 
         result = {
             "books_borrowed_today": books_borrowed_today,
