@@ -96,7 +96,7 @@ class BorrowRecord(db.Model):
 
         result = {"borrowed": None, "returned": None}
 
-        for i in range(0, 7):
+        for i in range(0, 8):
             dynamic_date = datetime.datetime.now() - datetime.timedelta(days=i)
             dynamic_date_start = dynamic_date.replace(hour=0, minute=0, second=0, microsecond=0)
             dynamic_date_end = dynamic_date.replace(hour=23, minute=59, second=59, microsecond=99)
