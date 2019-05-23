@@ -14,6 +14,7 @@ class FaceCapturer():
     def __init__(self):
         self.__dataset = 'dataset'
         self.__user = ''
+        self.__classifier = 'reception_pi/util/haarcascade_frontalface_default.xml'
 
         self.__camera = None
 
