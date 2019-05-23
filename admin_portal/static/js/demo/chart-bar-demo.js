@@ -27,6 +27,15 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
+ url_ = "http://192.168.1.100:8080/get-data"
+         $.ajax({
+             type: "GET",
+             dataType: "json",
+             url: url_,
+             success: function(result){
+            console.log(result);
+        }
+         });
 
 var ctx = document.getElementById("myBarChart");
 var myBarChart = new Chart(ctx, {

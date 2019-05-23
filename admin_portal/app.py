@@ -124,7 +124,7 @@ def search():
     return redirect('/list-books/')
 
 
-@app.route('/list-books/')
+@app.route('/list-books/', methods=["GET"])
 def list_books():
     if "authenticated" not in session:
         return redirect(url_for('login'))
@@ -137,7 +137,7 @@ def list_books():
 @app.route('/get-data/')
 def get_data():
     result = BorrowRecord.get_graph_data()
-    return result
+    return json.dumps(result)
 
 
 @app.route('/delete-book/<id>', methods=["POST"])
