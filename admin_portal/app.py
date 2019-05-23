@@ -97,8 +97,7 @@ def add_book_verification():
             flash('Invalid Values! Please try again.', 'danger')
         else:
             new_book = Book(title, isbn, published_date, author, total_copies)
-            db.session.add(new_book)
-            db.session.commit()
+            new_book.add_book()
             flash('Book Added-- {}'.format(title), 'success')
 
     return render_template("add-book.html")

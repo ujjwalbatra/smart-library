@@ -20,6 +20,10 @@ class Book(db.Model):
         self.total_copies = total_copies
         self.copies_available = total_copies
 
+    def add_book(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -46,3 +50,12 @@ class BookSchema(ma.Schema):
     class Meta:
         # Fields to expose.
         fields = ("id", "title", "isbn", "published_year", "author", "total_copies", "copies_available")
+
+
+class BorrowRecordSchema(ma.Schema):
+    def __init__(self, strict=True, **kwargs):
+        super().__init__(strict=strict, **kwargs)
+
+    class Meta:
+        # Fields to expose.
+        fields = ("id", "status", "issue_date", "return_date", "actual return date")
