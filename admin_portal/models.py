@@ -97,7 +97,7 @@ class BorrowRecord(db.Model):
         result = {"borrowed": None, "returned": None}
 
         for i in range(0, 7):
-            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=7)
+            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=i)
             dates.append(dynamic_date.date().__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \
@@ -115,7 +115,7 @@ class BorrowRecord(db.Model):
         count = []
 
         for i in range(0, 7):
-            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=7)
+            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=i)
             dates.append(dynamic_date.date().__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \

@@ -27,27 +27,36 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
- url_ = "http://192.168.1.100:8080/get-data"
-         $.ajax({
-             type: "GET",
-             dataType: "json",
-             url: url_,
-             success: function(result){
-            console.log(result);
-        }
-         });
+dates = null
+borrow_counts = null
+return_counts = null
+max = 10
+
+url_ = "http://192.168.1.100:8080/get-data"
+$.ajax({
+    type: "GET",
+    dataType: "json",
+    url: url_,
+    success: function (result) {
+        dates = result['borrowed']['dates']
+        borrow_counts = result['borrowed']['count']
+        return_counts = result['returned']['count']
+        max = (max < Math.max(...borrow_counts)) ? Math.max(...borrow_counts) : max
+        max = (max < Math.max(...return_counts)) ? Math.max(...return_counts) : max
+    }
+});
 
 var ctx = document.getElementById("myBarChart");
 var myBarChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["January", "February", "March", "April", "May", "June"],
+        labels: dates,
         datasets: [{
             label: "Revenue",
             backgroundColor: "#4e73df",
             hoverBackgroundColor: "#2e59d9",
             borderColor: "#4e73df",
-            data: [132, 255, 338, 176, 99, 450],
+            data: borrow_counts,
         }],
     },
     options: {
@@ -123,13 +132,13 @@ var ctx2 = document.getElementById("myBarChart2");
 var myBarChart2 = new Chart(ctx2, {
     type: 'bar',
     data: {
-        labels: ["January", "February", "March", "April", "May", "June"],
+        labels: dates,
         datasets: [{
             label: "Revenue",
             backgroundColor: "#4e73df",
             hoverBackgroundColor: "#2e59d9",
             borderColor: "#4e73df",
-            data: [132, 255, 338, 176, 99, 450],
+            data: return_counts,
         }],
     },
     options: {
