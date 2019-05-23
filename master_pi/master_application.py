@@ -202,23 +202,21 @@ class MasterApplication(object):
                 try:
                     user_input = int(user_input)
                 except ValueError:
-                    break;
+                    break
 
                 try_again = True if (user_input == 1) else False
 
             else:
                 # get date of 7 days from now
-                issue_date = datetime.date.today().__str__()
-                return_date = datetime.date.today() + datetime.timedelta(days=7)
+                issue_date = datetime.datetime.now().__str__()
+                return_date = datetime.datetime.now() + datetime.timedelta(days=7)
                 return_date = return_date.__str__()
 
                 self.__database.borrow_book(user_id, book_id, issue_date, return_date)
                 self.__database.update_num_available_copies(book_id, available_copies - 1)
 
-                todays_date = datetime.date.today().__str__()
-
                 # create issue and return date calendar events
-                self.__calendar.create_event(user, book_id, "borrowed", todays_date)
+                self.__calendar.create_event(user, book_id, "borrowed", issue_date)
                 self.__calendar.create_event(user, book_id, "expected return", return_date)
 
                 user_input = input("\nBook {} successfully borrowed. "
@@ -300,7 +298,7 @@ class MasterApplication(object):
             available_copies = self.__database.get_num_available_copies(book_id)
             self.__database.update_num_available_copies(book_id, available_copies + 1)
 
-            todays_date = datetime.date.today().__str__()
+            todays_date = datetime.datetime.now().__str__()
 
             self.__database.return_book(borrow_id, todays_date)
 
@@ -395,7 +393,7 @@ class MasterApplication(object):
             available_copies = self.__database.get_num_available_copies(book_id)
             self.__database.update_num_available_copies(book_id, available_copies + 1)
 
-            todays_date = datetime.date.today().__str__()
+            todays_date = datetime.datetime.now().__str__()
 
             self.__database.return_book(borrow_id, todays_date)
 
