@@ -50,7 +50,7 @@ $.ajax({
             data: {
                 labels: dates,
                 datasets: [{
-                    label: "Revenue",
+                    label: "Count",
                     backgroundColor: "#4e73df",
                     hoverBackgroundColor: "#2e59d9",
                     borderColor: "#4e73df",
@@ -70,7 +70,7 @@ $.ajax({
                 scales: {
                     xAxes: [{
                         time: {
-                            unit: 'month'
+                            unit: 'day'
                         },
                         gridLines: {
                             display: false,
@@ -119,7 +119,7 @@ $.ajax({
                     callbacks: {
                         label: function (tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                            return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                            return datasetLabel + ':' + number_format(tooltipItem.yLabel);
                         }
                     }
                 },
@@ -132,7 +132,7 @@ $.ajax({
             data: {
                 labels: dates,
                 datasets: [{
-                    label: "Revenue",
+                    label: "Count",
                     backgroundColor: "#4e73df",
                     hoverBackgroundColor: "#2e59d9",
                     borderColor: "#4e73df",
@@ -152,7 +152,7 @@ $.ajax({
                 scales: {
                     xAxes: [{
                         time: {
-                            unit: 'month'
+                            unit: 'day'
                         },
                         gridLines: {
                             display: false,
@@ -201,7 +201,7 @@ $.ajax({
                     callbacks: {
                         label: function (tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                            return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                            return datasetLabel + ':' + number_format(tooltipItem.yLabel);
                         }
                     }
                 },
