@@ -1,5 +1,5 @@
 from configuration import db, ma
-from sqlalchemy import ForeignKey, Enum, or_, and_, func
+from sqlalchemy import ForeignKey, Enum, or_, and_, cast, Date
 import datetime
 import enum
 
@@ -97,12 +97,16 @@ class BorrowRecord(db.Model):
         result = {"borrowed": None, "returned": None}
 
         for i in range(0, 7):
-            dynamic_date = datetime.date.today() - datetime.timedelta(days=i)
-            dates.append(dynamic_date.__str__())
+            dynamic_date = datetime.datetime.now() - datetime.timedelta(days=i)
+            dynamic_date_start = dynamic_date.replace(hour=0, minute=0, second=0, microsecond=0)
+            dynamic_date_end = dynamic_date.replace(hour=23, minute=59, second=59, microsecond=99)
+
+            dates.append(dynamic_date_start.date().__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.borrowed). \
-                filter(func.DATE(BorrowRecord.issue_date).like(dynamic_date)).count()
+                filter(and_(BorrowRecord.issue_date >= dynamic_date_start,
+                            BorrowRecord.issue_date <= dynamic_date_end)).count()
 
             count.append(books_borrowed)
 
@@ -116,11 +120,15 @@ class BorrowRecord(db.Model):
 
         for i in range(0, 7):
             dynamic_date = datetime.datetime.now() - datetime.timedelta(days=i)
-            dates.append(dynamic_date.date().__str__())
+            dynamic_date_start = dynamic_date.replace(hour=0, minute=0, second=0, microsecond=0)
+            dynamic_date_end = dynamic_date.replace(hour=23, minute=59, second=59, microsecond=99)
+
+            dates.append(dynamic_date_start.date().__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.returned). \
-                filter(func.DATE(BorrowRecord.actual_return_date).like(dynamic_date)).count()
+                filter(and_(BorrowRecord.issue_date >= dynamic_date_start,
+                            BorrowRecord.issue_date <= dynamic_date_end)).count()
 
             count.append(books_borrowed)
 
@@ -129,7 +137,7 @@ class BorrowRecord(db.Model):
             "count": count
         }
 
-        print(result);
+        print(result)
 
         return result
 
@@ -149,4 +157,4 @@ class BorrowRecordSchema(ma.Schema):
 
     class Meta:
         # Fields to expose.
-        fields = ("id", "status", "issue_date", "return_date", "actual return date")
+        fields = ("id", "status", "issue_date", "return_date", "actual_return_date")
