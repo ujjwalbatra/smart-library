@@ -145,14 +145,6 @@ def list_books():
     return render_template("list-books.html")
 
 
-@app.route('/logout/')
-def logout():
-    # end the session authentication
-    session.pop('authenticated', None)
-
-    return redirect(url_for("/"))
-
-
 @app.route('/delete-book/<id>', methods=["POST"])
 def delete_book(id):
     if "authenticated" not in session:
