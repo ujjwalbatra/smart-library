@@ -37,10 +37,34 @@ class TestReceptionDatabase(unittest.TestCase):
     def test_insert_user(self):
 
         num_of_users = self.countUsers()
-        self.database.insert_user("test", "test@test.com", "password")
+        self.database.insert_user("test123", "test@test.com", "password")
         updated_num_of_users = self.countUsers()
-
         self.assertEqual(updated_num_of_users, num_of_users + 1)
+
+    def test_check_username_already_exist(self):
+        self.database.insert_user("test1234", "test1234@test.com", "password")
+        result = self.database.check_username_already_exist("test1234")
+        self.assertEqual(result, True)
+
+        result = self.database.check_username_already_exist("123213331aas231231231231234")
+        self.assertEqual(result, False)
+
+    def test_check_email_already_exist(self):
+        self.database.insert_user("test12345", "test12345@test.com", "password")
+        result = self.database.check_email_already_exist("test12345@test.com")
+        self.assertEqual(result, True)
+
+        result = self.database.check_email_already_exist("test12avsdwefq233234231345@test.com")
+        self.assertEqual(result, False)
+
+    def test_get_password_by_user(self):
+        self.database.insert_user("test1234569999", "test123456@test.com", "password")
+        result = self.database.get_password_by_user("test1234569999")
+        print(result[0])
+        self.assertEqual(result[0], "password")
+
+        result = self.database.get_password_by_user("test12avsdwefq233234231345@test.com")
+        self.assertEqual(result, None)
 
 
 if __name__ == '__main__':

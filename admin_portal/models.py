@@ -2,6 +2,7 @@ from configuration import db, ma
 from sqlalchemy import ForeignKey, Enum, or_, and_, cast, Date
 import datetime
 import enum
+from pytz import timezone
 
 
 class MyEnum(enum.Enum):
@@ -127,6 +128,7 @@ class BorrowRecord(db.Model):
             dynamic_date_start = dynamic_date.replace(hour=0, minute=0, second=0, microsecond=0)
             dynamic_date_end = dynamic_date.replace(hour=23, minute=59, second=59, microsecond=99)
 
+            dynamic_date_start = timezone('Australia/Melbourne').localize(dynamic_date_start)
             dates.append(dynamic_date_start.date().__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \
@@ -148,6 +150,7 @@ class BorrowRecord(db.Model):
             dynamic_date_start = dynamic_date.replace(hour=0, minute=0, second=0, microsecond=0)
             dynamic_date_end = dynamic_date.replace(hour=23, minute=59, second=59, microsecond=99)
 
+            dynamic_date_start = timezone('Australia/Melbourne').localize(dynamic_date_start)
             dates2.append(dynamic_date_start.date().__str__())
 
             books_returned = db.session.query(BorrowRecord). \

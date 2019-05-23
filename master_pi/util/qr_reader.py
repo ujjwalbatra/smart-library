@@ -8,7 +8,7 @@ from imutils.video import VideoStream
 from pyzbar import pyzbar
 
 
-class QrReader():
+class QrReader(object):
     """
     Uses the camera to search for qr codes and decodes them to strings
     """
@@ -23,7 +23,7 @@ class QrReader():
 
         self.__video_stream = VideoStream(src=0).start()
 
-        #Allow time for video stream to start up
+        # Allow time for video stream to start up
         time.sleep(2.0)
 
     def find_codes_with_timeout(self, timeout: int):

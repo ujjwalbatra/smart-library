@@ -1,3 +1,9 @@
+"""
+reception_application.py
+====================================
+The core module of my smart library's reception pi
+"""
+
 import getpass
 import json
 from datetime import datetime
@@ -12,6 +18,10 @@ logging.basicConfig(filename="./reception_pi/logs/reception_application.log", fi
 
 
 class ReceptionApplication(object):
+    """
+    main controller for reception pi.
+    """
+
     def __init__(self):
         self.__db_name = './reception_pi/' + self.__get_database_filename()
         self.__db_connection = reception_database.ReceptionDatabase(self.__db_name)

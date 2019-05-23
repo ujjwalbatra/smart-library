@@ -33,7 +33,7 @@ class InputValidation(object):
             boolean: a boolean specifying whether the username is valid or not
         """
 
-        is_valid = re.search("\s+", username)
+        is_valid = re.search(r"\s+", username)
         if is_valid:
             return False
 
