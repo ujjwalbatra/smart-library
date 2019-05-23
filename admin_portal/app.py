@@ -154,6 +154,8 @@ def delete_book(id):
         Book.query.filter(Book.id == id).delete()
         db.session.commit()
 
+    return redirect(url_for('dashboard'))
+
 
 @app.errorhandler(404)
 def page_not_found():
