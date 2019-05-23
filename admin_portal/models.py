@@ -1,6 +1,12 @@
 from configuration import db, ma
 from sqlalchemy import ForeignKey, Enum, or_, and_
 import datetime
+import enum
+
+
+class MyEnum(enum.Enum):
+    borrowed = "borrowed"
+    returned = "returned"
 
 
 class Book(db.Model):
@@ -48,7 +54,7 @@ class BorrowRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
     book_id = db.Column(db.Integer, ForeignKey('book.id'), nullable=False)
-    status = db.Column(Enum('borrowed', 'returned'))
+    status = db.Column(Enum(MyEnum))
     issue_date = db.Column(db.DateTime, nullable=False)
     return_date = db.Column(db.DateTime)
     actual_return_date = db.Column(db.DateTime)
@@ -59,15 +65,15 @@ class BorrowRecord(db.Model):
         last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 
         books_borrowed_today = db.session.query(). \
-            filter(BorrowRecord.id.status == "borrowed"). \
+            filter(BorrowRecord.id.status == MyEnum.borrowed). \
             filter(BorrowRecord.issue_date.like(today)).count()
 
         books_returned_today = db.session.query(). \
-            filter(BorrowRecord.id.status == "returned"). \
+            filter(BorrowRecord.id.status == MyEnum.returned). \
             filter(BorrowRecord.actual_return_date.like(today)).count()
 
         books_borrowed_this_week = db.session.query(BorrowRecord.id). \
-            filter(BorrowRecord.id.status == "borrowed"). \
+            filter(BorrowRecord.id.status == MyEnum.returned). \
             filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
 
         books_returned_this_week = db.session.query(BorrowRecord.id). \
