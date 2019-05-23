@@ -104,7 +104,6 @@ class BorrowRecord(db.Model):
             dates.append(dynamic_date_start.date().__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \
-                filter(BorrowRecord.status == MyEnum.borrowed). \
                 filter(and_(BorrowRecord.issue_date >= dynamic_date_start,
                             BorrowRecord.issue_date <= dynamic_date_end)).count()
 
@@ -125,12 +124,12 @@ class BorrowRecord(db.Model):
 
             dates2.append(dynamic_date_start.date().__str__())
 
-            books_borrowed = db.session.query(BorrowRecord). \
+            books_returned = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.returned). \
                 filter(and_(BorrowRecord.actual_return_date >= dynamic_date_start,
                             BorrowRecord.actual_return_date <= dynamic_date_end)).count()
 
-            count2.append(books_borrowed)
+            count2.append(books_returned)
 
         result["returned"] = {
             "dates": dates2,
