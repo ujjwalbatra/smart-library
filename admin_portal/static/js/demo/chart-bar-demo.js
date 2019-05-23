@@ -43,10 +43,8 @@ $.ajax({
         return_counts = new Array(result['returned']['count'])
         max = (max < Math.max(...borrow_counts)) ? Math.max(...borrow_counts) : max
         max = (max < Math.max(...return_counts)) ? Math.max(...return_counts) : max
-    }
-});
 
-var ctx = document.getElementById("myBarChart");
+        var ctx = document.getElementById("myBarChart");
 var myBarChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -209,3 +207,9 @@ var myBarChart2 = new Chart(ctx2, {
         },
     }
 });
+
+    }
+});
+
+
+
