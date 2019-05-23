@@ -7,6 +7,7 @@ from passlib.hash import pbkdf2_sha256
 from util import reception_database
 from util import input_validation
 from util import socket_client
+from util import face_util
 
 logging.basicConfig(filename="./reception_pi/logs/reception_application.log", filemode='a', level=logging.DEBUG)
 
@@ -16,6 +17,7 @@ class ReceptionApplication(object):
         self.__db_name = './reception_pi/' + self.__get_database_filename()
         self.__db_connection = reception_database.ReceptionDatabase(self.__db_name)
         self.__socket_client = socket_client.SocketClient()
+        self.__face_util = face_util.FaceUtil()
 
     def __get_database_filename(self):
         """
@@ -53,6 +55,56 @@ class ReceptionApplication(object):
             valid_credentials = self.__verify_hash(password, hash_)
 
             if valid_credentials:
+                print("Logging in to master...")
+
+                data_for_mp = {'action': 'login', 'user': user}
+                json_data_for_mp = json.dumps(data_for_mp)
+
+                status = self.__socket_client.send_message_and_wait(json_data_for_mp)
+                print(status)
+
+                if status == "logout":
+                    try_login = 0
+                    print("Logged out by master")
+                elif status == "FAILURE":
+                    print("Failed to connect to master")
+
+            else:
+                option_selected = input("\nInvalid username or password!"
+                                        "\nEnter 1 to try again or any other key to go back to the previous menu\n")
+                try:
+                    try_login = int(option_selected)
+                except ValueError:
+                    try_login = 99
+
+    def handle_login_with_face(self):
+        """
+        Captures the user's face and matches it against registered user's faces
+        Also notifies MasterPi if user is logged in.
+        """
+        try_login = 1
+
+        # multiple login trials
+        while try_login == 1:
+            print("\nLook at camera to login...")
+            recognised_users = self.__face_util.identify_face()
+
+            if not recognised_users:
+                print("\nNo face detected! Please try again")
+                return
+
+            if len(recognised_users) > 1:
+                print("\nMultiple faces detected! Please try again")
+                return
+
+            user = recognised_users[0]
+
+            row = self.__db_connection.get_password_by_user(user)
+
+            if row is None:
+                print("\nUser no longer exists! Please try again")
+                return
+
                 print("Logging in to master...")
 
                 data_for_mp = {'action': 'login', 'user': user}
@@ -126,6 +178,10 @@ class ReceptionApplication(object):
 
             password_hash = self.__hash_password(password)
             self.__db_connection.insert_user(username, email, password_hash)
+
+            print("\nPlease look at camera to register face")
+
+            self.__face_util.register_face(username)
 
             print("\nRegistering user...")
 
@@ -205,8 +261,10 @@ class ReceptionApplication(object):
                 if option_selected == 1:
                     self.handle_login()
                 elif option_selected == 2:
-                    self.handle_register()
+                    self.handle_login_with_face()
                 elif option_selected == 3:
+                    self.handle_register()
+                elif option_selected == 4:
                     quit_reception_application = True
                 else:
                     print("\nInvalid Input! Try again.", end="\n")
