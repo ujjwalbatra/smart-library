@@ -40,7 +40,7 @@ $.ajax({
     success: function (result) {
         dates = result['borrowed']['dates']
         borrow_counts = result['borrowed']['count']
-        return_counts = result['returned']['count'])
+        return_counts = result['returned']['count']
         max = (max < Math.max(...borrow_counts)) ? Math.max(...borrow_counts) : max
         max = (max < Math.max(...return_counts)) ? Math.max(...return_counts) : max
 

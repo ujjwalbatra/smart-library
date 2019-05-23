@@ -128,7 +128,7 @@ def add_book_verification():
             total_copies = int(request.form.get('totalCopies'))
         except ValueError:
             flash('Invalid Values! Please try again.', 'danger')
-            return redirect(url_for("add-book.html"))
+            return render_template("add-book.html")
 
         if title == '' \
                 or isbn == '' \
@@ -141,7 +141,7 @@ def add_book_verification():
             new_book.add_book()
             flash('Book Added-- {}'.format(title), 'success')
 
-    return redirect(url_for("add-book.html"))
+    return render_template("add-book.html")
 
 
 @app.route('/search-book/')
