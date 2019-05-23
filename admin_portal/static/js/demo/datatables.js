@@ -17,18 +17,26 @@ $(document).ready(function () {
         }]
     });
 
+    function loadConfigFile() {
+        $.getJSON('./admin_portal/config.json', function (data) {
+            return data.hostname;
+        });
+    };
+
     $('#dataTable tbody').on('click', 'button', function () {
+        hostname = loadConfigFile()
+
         var data = table.row($(this).parents('tr')).data();
         if (data[4] !== data[5]) {
             $("#warningModal").modal()
         } else {
-            url_ = "http://192.168.1.100:8080/delete-book/<" + data[0] + ">"
+            url_ = "http://" + hostname + "/delete-book/<" + data[0] + ">"
             $.ajax({
                 type: "POST",
                 dataType: "json",
                 url: url_,
             });
-            window.location.replace("192.168.1.100:8080/");
+            window.location.replace(hostname + ":8080/");
         }
     });
 });
