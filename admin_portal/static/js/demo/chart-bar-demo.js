@@ -38,9 +38,9 @@ $.ajax({
     dataType: "json",
     url: url_,
     success: function (result) {
-        dates = new Array(result['borrowed']['dates'])
-        borrow_counts = new Array(result['borrowed']['count'])
-        return_counts = new Array(result['returned']['count'])
+        dates = result['borrowed']['dates']
+        borrow_counts = result['borrowed']['count']
+        return_counts = result['returned']['count'])
         max = (max < Math.max(...borrow_counts)) ? Math.max(...borrow_counts) : max
         max = (max < Math.max(...return_counts)) ? Math.max(...return_counts) : max
 
