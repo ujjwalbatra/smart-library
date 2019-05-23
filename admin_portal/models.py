@@ -28,24 +28,11 @@ class Book(db.Model):
         self.copies_available = total_copies
 
     def add_book(self):
-        """
-                add book to the database
-                """
         db.session.add(self)
         db.session.commit()
 
     @staticmethod
-    def query_book(query: str):
-        """
-        query book by partial match on id, title, author or isbn
-
-        Args:
-            query: search query
-
-        Returns:
-            list: list of books matched
-
-        """
+    def query_book(query):
         result = Book.query.with_entities(Book.id, Book.title, Book.isbn, Book.author, Book.published_year,
                                           Book.total_copies, Book.copies_available). \
             filter(or_(Book.id.like("%" + query + "%"), Book.title.like("%" + query + "%"),
@@ -74,13 +61,6 @@ class BorrowRecord(db.Model):
 
     @staticmethod
     def get_stats():
-        """
-        get statistics of borrow and return information for current day and last 7 days
-
-        Returns:
-            dictionary: dictionary object of statistics
-
-        """
         today = datetime.datetime.now().__str__()
         last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 
@@ -111,12 +91,6 @@ class BorrowRecord(db.Model):
 
     @staticmethod
     def get_graph_data():
-        """
-        get statistics required to build graphs for returned and borrowed book records of last 1 week
-
-        Returns:
-            dictionary:  dictionary object of statistics
-        """
         dates = []
         count = []
 

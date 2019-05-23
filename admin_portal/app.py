@@ -15,13 +15,6 @@ app.register_blueprint(site)
 
 @app.route('/')
 def homepage():
-    """
-    redirect to login page or dash board depending on whether the user has logged in or not
-
-    Returns:
-        redirect: redirect to login page or dash board depending on whether the user has logged in or not
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -32,14 +25,6 @@ def homepage():
 
 @app.route('/check-credentials/', methods=["POST"])
 def check_credentials():
-    """
-    redirect to login or dashboard depending if the credential matches. also authenticates the user
-
-    Returns:
-        redirect: redirect to login or dashboard
-
-    """
-
     error = None
     if request.method == 'POST':
         if request.form.get('username', None) != 'jaqen' or request.form.get('password', None) != 'hghar':
@@ -55,13 +40,6 @@ def check_credentials():
 
 @app.route('/login/')
 def login():
-    """
-    loads html for login
-
-    Returns:
-        render_template: renders login.html
-    """
-
     if 'authenticated' in session:
         session.pop('authenticated', None)
 
@@ -70,14 +48,6 @@ def login():
 
 @app.route('/dashboard/')
 def dashboard():
-    """
-    redirect to login or dashboard depending if the user is logged in
-
-    Returns:
-        redirect: redirect to login or dashboard
-
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -90,13 +60,6 @@ def dashboard():
 
 @app.route('/add-book/')
 def add():
-    """
-    redirect to login or rendering of Add Book page depending if the user is logged in
-
-    Returns:
-        render_template: renders Add Book
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -107,13 +70,6 @@ def add():
 
 @app.route('/add-book-verification/', methods=["POST", "GET"])
 def add_book_verification():
-    """
-    renders Add Book page if the user is logged in otherwise redirect to login
-
-    Returns:
-        render_template: renders Add Book page
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -146,13 +102,6 @@ def add_book_verification():
 
 @app.route('/search-book/')
 def search_book():
-    """
-    renders search book page if the user is logged in otherwise redirect to login
-
-    Returns:
-        render_template: renders Search Book page
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -163,14 +112,6 @@ def search_book():
 
 @app.route('/search/', methods=["POST", "GET"])
 def search():
-    """
-    searches for the query in database and shows a list
-
-    Returns:
-        redirect: redirects to list of books page
-
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -185,13 +126,6 @@ def search():
 
 @app.route('/list-books/', methods=["GET"])
 def list_books():
-    """
-    renders list of books matched or redirects to login if user is not logged in
-
-    Returns:
-        render_template: renders list of books
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -202,26 +136,12 @@ def list_books():
 
 @app.route('/get-data/')
 def get_data():
-    """
-    returns statistics (date vs count of books borrowed/returned) to generate bar chart
-
-    Returns:
-        json: json of statistics
-    """
-
     result = BorrowRecord.get_graph_data()
     return json.dumps(result)
 
 
 @app.route('/delete-book/<id>', methods=["POST"])
 def delete_book(id):
-    """
-    deletes the book by id
-
-    Args:
-        id: id of book to be deleted
-    """
-
     if "authenticated" not in session:
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
@@ -239,9 +159,6 @@ def delete_book(id):
 
 @app.errorhandler(404)
 def page_not_found():
-    """
-    renders 404 page
-    """
     return render_template('404.html')
 
 
