@@ -36,6 +36,7 @@ def check_credentials():
         if request.form.get('username', None) != 'admin' or request.form.get('password', None) != 'admin':
             error = 'Invalid Credentials! Please try again.'
         else:
+            session['authenticated'] = True
             return redirect(url_for('dashboard'))
 
     flash(error, 'danger')
@@ -44,7 +45,9 @@ def check_credentials():
 
 @app.route('/login/')
 def login():
-    session['authenticated'] = True
+    if 'authenticated' in session:
+        session.pop('authenticated', None)
+
     return render_template('login.html')
 
 
