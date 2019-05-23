@@ -34,6 +34,15 @@ class Book(db.Model):
         book_schema = BookSchema(many=True)
         return book_schema.dump(result).data
 
+    @staticmethod
+    def get_stats():
+        result = Book.query.filter(Book.id.status("borrowed")).all()
+
+        # session.query(MyTable.col1).count()
+
+        book_schema = BookSchema(many=True)
+        return book_schema.dump(result).data
+
 
 class User(db.Model):
     __tablename__ = 'user'

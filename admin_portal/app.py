@@ -54,7 +54,7 @@ def dashboard():
         return redirect(url_for('login'))
     elif session['authenticated'] is not True:
         return redirect(url_for('login'))
-
+    book = Book.get_stats()
     return render_template("dashboard.html")
 
 
