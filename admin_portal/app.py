@@ -21,7 +21,7 @@ def homepage():
     elif session['authenticated'] is not True:
         return redirect(url_for('login'))
 
-    return redirect(url_for(dashboard))
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/check-credentials/', methods=["POST"])
