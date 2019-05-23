@@ -136,8 +136,6 @@ class BorrowRecord(db.Model):
             "count": count2
         }
 
-        print(result)
-
         return result
 
 

@@ -43,6 +43,7 @@ $.ajax({
         return_counts = result['returned']['count']
         max = (max < Math.max(...borrow_counts)) ? Math.max(...borrow_counts) : max
         max = (max < Math.max(...return_counts)) ? Math.max(...return_counts) : max
+        com
     }
 });
 
@@ -50,13 +51,13 @@ var ctx = document.getElementById("myBarChart");
 var myBarChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: dates,
+        labels: ["2019-05-23", "2019-05-22", "2019-05-21", "2019-05-20", "2019-05-19", "2019-05-18", "2019-05-17"],
         datasets: [{
             label: "Revenue",
             backgroundColor: "#4e73df",
             hoverBackgroundColor: "#2e59d9",
             borderColor: "#4e73df",
-            data: borrow_counts,
+            data: [0, 2, 9, 0, 0, 6, 0],
         }],
     },
     options: {
