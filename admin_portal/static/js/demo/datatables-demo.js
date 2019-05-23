@@ -22,7 +22,7 @@ $(document).ready(function () {
         if (data[4] !== data[5]) {
             $("#warningModal").modal()
         } else {
-            url_ = "http://192.168.1.103:8080/delete-book/<" + data[0] +">"
+            url_ = "http://192.168.1.100:8080/delete-book/<" + data[0] +">"
          $.ajax({
              type: "POST",
              dataType: "json",
