@@ -56,7 +56,7 @@ def dashboard():
         return redirect(url_for('login'))
 
     stats = BorrowRecord.get_stats()
-    return render_template("dashboard.html", stats=json.loads(stats))
+    return render_template("dashboard.html", stats=stats)
 
 
 @app.route('/add-book/')

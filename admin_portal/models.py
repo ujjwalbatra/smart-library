@@ -87,8 +87,7 @@ class BorrowRecord(db.Model):
             "books_returned_this_week ": books_returned_this_week
         }
 
-        book_record_schema = BorrowRecordSchema(many=True)
-        return book_record_schema.dump(result).data
+        return result
 
 
 class BookSchema(ma.Schema):
