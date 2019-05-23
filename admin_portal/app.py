@@ -236,11 +236,11 @@ def delete_book(id):
 
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     """
     renders 404 page
     """
-    return render_template('404.html')
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
