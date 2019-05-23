@@ -115,26 +115,26 @@ class BorrowRecord(db.Model):
             "count": count
         }
 
-        dates = []
-        count = []
+        dates2 = []
+        count2 = []
 
         for i in range(0, 7):
             dynamic_date = datetime.datetime.now() - datetime.timedelta(days=i)
             dynamic_date_start = dynamic_date.replace(hour=0, minute=0, second=0, microsecond=0)
             dynamic_date_end = dynamic_date.replace(hour=23, minute=59, second=59, microsecond=99)
 
-            dates.append(dynamic_date_start.date().__str__())
+            dates2.append(dynamic_date_start.date().__str__())
 
             books_borrowed = db.session.query(BorrowRecord). \
                 filter(BorrowRecord.status == MyEnum.returned). \
-                filter(and_(BorrowRecord.issue_date >= dynamic_date_start,
-                            BorrowRecord.issue_date <= dynamic_date_end)).count()
+                filter(and_(BorrowRecord.actual_return_date >= dynamic_date_start,
+                            BorrowRecord.actual_return_date <= dynamic_date_end)).count()
 
-            count.append(books_borrowed)
+            count2.append(books_borrowed)
 
         result["returned"] = {
-            "dates": dates,
-            "count": count
+            "dates": dates2,
+            "count": count2
         }
 
         print(result)
