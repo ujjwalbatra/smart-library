@@ -37,10 +37,11 @@ class FaceCapturer():
         face_detector = cv2.CascadeClassifier(self.__classifier)
 
         img_counter = 0
-        while img_counter <= 10:
-            key = input("Press q to quit or ENTER to continue: ")
-            if key == "q":
-                break
+        while img_counter <= 9:
+            key = input("Press ENTER to take photo, or q to quit")
+            #if key == "q":
+                #print("Aborting registration")
+                #return
 
             ret, frame = self.__camera.read()
             if not ret:
@@ -49,14 +50,14 @@ class FaceCapturer():
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_detector.detectMultiScale(gray, 1.3, 5)
 
-            if faces != () and faces.size == 0:
+            if faces == () or faces.size == 0:
                 print("No face detected, please try again")
                 continue
 
             for (x, y, w, h) in faces:
                 img_name = "{}/{:04}.jpg".format(folder, img_counter)
                 cv2.imwrite(img_name, frame[y : y + h, x : x + w])
-                print("{} written!".format(img_name))
+                print("Photo {}/10 saved!".format(img_counter + 1))
                 img_counter += 1
 
         self.close()
