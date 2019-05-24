@@ -18,6 +18,7 @@ class MasterApplication(object):
         self.__database.create_tables()
         self.__socket = socket_host.SocketHost()
         self.__voice_search = voice_search.VoiceSearch()
+        self.__qr_reader = qr_reader.QrReader()
 
     def __console_search_book(self):
         """
@@ -321,9 +322,6 @@ class MasterApplication(object):
             user: username or email address of the user
         """
 
-        print("\nStarting camera...\n")
-        reader = qr_reader.QrReader()
-
         user_id = self.__database.get_user_id_by_user(user)
 
         try_again = True
@@ -333,6 +331,9 @@ class MasterApplication(object):
         if len(books_borrowed) is 0:
             print("\nNo books borrowed\n")
             return
+
+        print("\nStarting camera...\n")
+        self.__qr_reader.start()
 
         print("\nFollowing books have been borrowed from the library: \n")
         for id_ in books_borrowed:
@@ -348,7 +349,8 @@ class MasterApplication(object):
 
             while not valid_input:
                 print("\nScan book to return...\n")
-                found_codes = reader.find_codes_with_timeout(10)
+                found_codes = self.__qr_reader.find_codes_with_timeout(10)
+
                 if len(found_codes) == 0:
                     print("No book detected")
                     return
@@ -453,6 +455,7 @@ class MasterApplication(object):
         """
         self.__socket.close()
         self.__database.close()
+        self.__qr_reader.close()
 
     def main(self):
         while True:
