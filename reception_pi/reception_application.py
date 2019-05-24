@@ -71,7 +71,6 @@ class ReceptionApplication(object):
                 json_data_for_mp = json.dumps(data_for_mp)
 
                 status = self.__socket_client.send_message_and_wait(json_data_for_mp)
-                print(status)
 
                 if status == "logout":
                     try_login = 0
@@ -144,8 +143,7 @@ class ReceptionApplication(object):
         while registration_unsuccessful:
             username = input("\nEnter Username (must be at-least 5 characters, no special characters allowed): ")
             username = username.strip()  # remove leading and trailing spaces
-            username_is_valid = validate_input.validate_username(username)
-
+            username_is_valid = validate_input.validate_username(username) 
             if not username_is_valid:
                 print("Invalid username. Try again.")
                 continue
@@ -179,14 +177,23 @@ class ReceptionApplication(object):
                 print("Invalid password. Try again.")
                 continue
 
+            #Test connection to master pi before registering locally
+            print("Testing connection to master...")
+            test_status = self.__socket_client.send_message(json.dumps({'action': 'test'}))
+            if test_status == "SUCCESS":
+                print("Able to connect to master")
+            elif test_status == "FAILURE":
+                print("Failed to register, could not connect to master pi")
+                return
+
             print("\nPlease look at camera to register face")
             self.__face_util.register_face(username)
 
             password_hash = self.__hash_password(password)
-            self.__db_connection.insert_user(username, email, password_hash)
 
             print("\nRegistering user...")
 
+            self.__db_connection.insert_user(username, email, password_hash)
             user_id = self.__db_connection.get_user_id(username)
 
             data_for_mp = {'action': 'register', 'id': user_id, 'username': username, 'email': email}
@@ -195,9 +202,11 @@ class ReceptionApplication(object):
             status = self.__socket_client.send_message(json_data_for_mp)
 
             if status == "SUCCESS":
-                print("Registration successful\n")
+                print("Registration successful!\n")
             elif status == "FAILURE":
-                print("Failed to connect to master\n")
+                print("Failed to register, error in master pi\n")
+                return
+
 
             registration_unsuccessful = False
 

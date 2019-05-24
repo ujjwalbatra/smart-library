@@ -59,6 +59,9 @@ class SocketClient():
         try:
             self.__connect_to_host()
             self.__send_string(message)
+
+            print("Successfully logged into master")
+
             response = self.__wait_for_response()
             self.close()
 
