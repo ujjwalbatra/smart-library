@@ -467,6 +467,7 @@ class MasterApplication(object):
                 email = action_json["email"]
 
                 self.__database.add_user(user_id, username, email)
+                print("Registered user {}".format(username))
 
             elif action_type == "login":
                 self.__show_login_menu(action_json["user"])
