@@ -34,7 +34,12 @@ class FaceRecogniser():
         """
 
         print("[INFO] loading encodings...")
-        self.__data = pickle.loads(open(self.__encodings, "rb").read())
+
+        try:
+            self.__data = pickle.loads(open(self.__encodings, "rb").read())
+        except FileNotFoundError:
+            print("\nNo users registered!")
+            return
 
         names = []
 
@@ -46,6 +51,13 @@ class FaceRecogniser():
                 names.append(identified_name)
 
         return names
+
+    def close(self):
+        """
+        Releases the video stream
+        """
+
+        self.__video_stream.stop()
 
     def __start_camera(self):
         self.__video_stream = VideoStream(src=0).start()
@@ -65,19 +77,22 @@ class FaceRecogniser():
         self.__start_camera()
 
         start_time = time.time()
+        encoded_faces = []
 
         while True:
             rgb_image = self.__get_rgb_image()
             encoded_faces = self.__encode_faces(rgb_image)
 
             if encoded_faces:
-                self.__video_stream.stop()
-                return encoded_faces
+                break
 
-            elapsed_time = time.time() - start_time.time()
+            elapsed_time = time.time() - start_time
 
             if elapsed_time > timeout:
-                return []
+                break
+
+        self.close()
+        return encoded_faces
 
     def __encode_faces(self, image):
         boxes = face_recognition.face_locations(image, model=self.__detection_method)

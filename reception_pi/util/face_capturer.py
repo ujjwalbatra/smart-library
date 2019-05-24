@@ -34,7 +34,7 @@ class FaceCapturer():
 
         self.__start_camera()
 
-        face_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+        face_detector = cv2.CascadeClassifier(self.__classifier)
 
         img_counter = 0
         while img_counter <= 10:
@@ -49,7 +49,7 @@ class FaceCapturer():
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = face_detector.detectMultiScale(gray, 1.3, 5)
 
-            if faces:
+            if faces != () and faces.size == 0:
                 print("No face detected, please try again")
                 continue
 

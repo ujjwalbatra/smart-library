@@ -55,7 +55,7 @@ class FaceEncoder():
             "names": self.__known_names
         }
 
-        with open(self.__encodings) as file:
+        with open(self.__encodings, "wb") as file:
             file.write(pickle.dumps(data))
 
     @staticmethod

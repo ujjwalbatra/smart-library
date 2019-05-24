@@ -2,9 +2,9 @@
 Provides the FaceUtil class for registering and identifying faces
 """
 
-from util.face_capturer import FaceCapturer
-from util.face_encoder import FaceEncoder
-from util.face_recogniser import FaceRecogniser
+from .face_capturer import FaceCapturer
+from .face_encoder import FaceEncoder
+from .face_recogniser import FaceRecogniser
 
 class FaceUtil():
     """
@@ -36,5 +36,3 @@ class FaceUtil():
         face_recogniser = FaceRecogniser()
         names = face_recogniser.find_and_identify_faces_with_timeout(5)
         return names
-
-

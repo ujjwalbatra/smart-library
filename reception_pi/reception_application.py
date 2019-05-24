@@ -105,27 +105,20 @@ class ReceptionApplication(object):
                 print("\nUser no longer exists! Please try again")
                 return
 
-                print("Logging in to master...")
+            print("Logging in to master...")
 
-                data_for_mp = {'action': 'login', 'user': user}
-                json_data_for_mp = json.dumps(data_for_mp)
+            data_for_mp = {'action': 'login', 'user': user}
+            json_data_for_mp = json.dumps(data_for_mp)
 
-                status = self.__socket_client.send_message_and_wait(json_data_for_mp)
-                print(status)
+            status = self.__socket_client.send_message_and_wait(json_data_for_mp)
+            print(status)
 
-                if status == "logout":
-                    try_login = 0
-                    print("Logged out by master")
-                elif status == "FAILURE":
-                    print("Failed to connect to master")
-
-            else:
-                option_selected = input("\nInvalid username or password!"
-                                        "\nEnter 1 to try again or any other key to go back to the previous menu\n")
-                try:
-                    try_login = int(option_selected)
-                except ValueError:
-                    try_login = 99
+            if status == "logout":
+                try_login = 0
+                print("Logged out by master")
+            elif status == "FAILURE":
+                print("Failed to connect to master")
+                break
 
     def handle_register(self):
         """
@@ -176,12 +169,11 @@ class ReceptionApplication(object):
                 print("Invalid password. Try again.")
                 continue
 
+            print("\nPlease look at camera to register face")
+            self.__face_util.register_face(username)
+
             password_hash = self.__hash_password(password)
             self.__db_connection.insert_user(username, email, password_hash)
-
-            print("\nPlease look at camera to register face")
-
-            self.__face_util.register_face(username)
 
             print("\nRegistering user...")
 
@@ -248,8 +240,9 @@ class ReceptionApplication(object):
             while not quit_reception_application:
                 option_selected = input("\nPlease select one of the following option:\n"
                                         "\t1. Login\n"
-                                        "\t2. Register a new account\n"
-                                        "\t3. Quit\n"
+                                        "\t2. Login with facial recognition\n"
+                                        "\t3. Register a new account\n"
+                                        "\t4. Quit\n"
                                         "\nSelect an option: ")
 
                 # if user input is not an integer then ask for input again
