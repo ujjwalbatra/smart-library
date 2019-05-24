@@ -71,7 +71,6 @@ class ReceptionApplication(object):
                 json_data_for_mp = json.dumps(data_for_mp)
 
                 status = self.__socket_client.send_message_and_wait(json_data_for_mp)
-                print(status)
 
                 if status == "logout":
                     try_login = 0
