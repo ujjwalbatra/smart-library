@@ -209,16 +209,18 @@ class MasterApplication(object):
 
             else:
                 # get date of 7 days from now
+                issue_date_cal = datetime.datetime.date()
                 issue_date = datetime.datetime.now().__str__()
                 return_date = datetime.datetime.now() + datetime.timedelta(days=7)
+                return_date_cal = return_date.date()
                 return_date = return_date.__str__()
 
                 self.__database.borrow_book(user_id, book_id, issue_date, return_date)
                 self.__database.update_num_available_copies(book_id, available_copies - 1)
 
                 # create issue and return date calendar events
-                self.__calendar.create_event(user, book_id, "borrowed", issue_date)
-                self.__calendar.create_event(user, book_id, "expected return", return_date)
+                self.__calendar.create_event(user, book_id, "borrowed", issue_date_cal)
+                self.__calendar.create_event(user, book_id, "expected return", return_date_cal)
 
                 user_input = input("\nBook {} successfully borrowed. "
                                    "\nPress 1 to borrow another book or any other key to go to the previous menu: "
@@ -455,7 +457,9 @@ class MasterApplication(object):
         """
         self.__socket.close()
         self.__database.close()
-        self.__qr_reader.close()
+
+        if self.__qr_reader is not None:
+            self.__qr_reader.close()
 
     def main(self):
         while True:
