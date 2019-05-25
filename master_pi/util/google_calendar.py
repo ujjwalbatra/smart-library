@@ -13,7 +13,9 @@ from google.auth.transport.requests import Request
 
 
 class GoogleCalendar(object):
-
+    """
+    provides funtionality of creating calendar events
+    """
     def __init__(self):
         self.SCOPES = ['https://www.googleapis.com/auth/calendar']
         self.__service = self.__authenticate_user()

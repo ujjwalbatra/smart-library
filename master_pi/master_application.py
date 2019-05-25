@@ -11,7 +11,9 @@ logging.basicConfig(filename="./master_pi/logs/master_application.log", filemode
 
 
 class MasterApplication(object):
-
+    """
+    controller for the master pi
+    """
     def __init__(self):
         self.__database = gcp_database.GcpDatabase()
         self.__calendar = google_calendar.GoogleCalendar()
@@ -209,7 +211,7 @@ class MasterApplication(object):
 
             else:
                 # get date of 7 days from now
-                issue_date_cal = datetime.datetime.date()
+                issue_date_cal = datetime.date.today()
                 issue_date = datetime.datetime.now().__str__()
                 return_date = datetime.datetime.now() + datetime.timedelta(days=7)
                 return_date_cal = return_date.date()
@@ -462,6 +464,7 @@ class MasterApplication(object):
             self.__qr_reader.close()
 
     def main(self):
+        """waits for the login from reception pi"""
         while True:
             print("Waiting for client...")
             action_string = self.__socket.wait_for_message()
