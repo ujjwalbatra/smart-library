@@ -32,7 +32,7 @@ borrow_counts = null
 return_counts = null
 max = 10
 
-url_ = "http://192.168.1.100:8080/get-data"
+url_ = "http://10.132.57.216:8080/get-data"
 $.ajax({
     type: "GET",
     dataType: "json",
@@ -50,7 +50,7 @@ $.ajax({
             data: {
                 labels: dates,
                 datasets: [{
-                    label: "Revenue",
+                    label: "Books",
                     backgroundColor: "#4e73df",
                     hoverBackgroundColor: "#2e59d9",
                     borderColor: "#4e73df",
@@ -119,7 +119,7 @@ $.ajax({
                     callbacks: {
                         label: function (tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                            return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                            return datasetLabel + ':' + number_format(tooltipItem.yLabel);
                         }
                     }
                 },
@@ -132,7 +132,7 @@ $.ajax({
             data: {
                 labels: dates,
                 datasets: [{
-                    label: "Revenue",
+                    label: "Total",
                     backgroundColor: "#4e73df",
                     hoverBackgroundColor: "#2e59d9",
                     borderColor: "#4e73df",
@@ -201,7 +201,7 @@ $.ajax({
                     callbacks: {
                         label: function (tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                            return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                            return datasetLabel + ': ' + number_format(tooltipItem.yLabel);
                         }
                     }
                 },

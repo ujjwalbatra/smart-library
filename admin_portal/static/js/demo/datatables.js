@@ -22,13 +22,15 @@ $(document).ready(function () {
         if (data[4] !== data[5]) {
             $("#warningModal").modal()
         } else {
-            url_ = "http://192.168.1.100:8080/delete-book/<" + data[0] + ">"
+            url_ = "http://10.132.57.216:8080/delete-book/<" + data[0] + ">"
             $.ajax({
                 type: "POST",
                 dataType: "json",
                 url: url_,
+		success: function (result) {
+            		window.location.replace("10.132.57.216:8080/");
+		}
             });
-            window.location.replace("192.168.1.100:8080/");
         }
     });
 });
