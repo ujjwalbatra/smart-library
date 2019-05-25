@@ -1,3 +1,7 @@
+"""
+routes for admin portal
+"""
+
 import json
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, jsonify

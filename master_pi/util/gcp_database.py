@@ -1,3 +1,7 @@
+"""
+provides gcp database utility for master application on google cloud
+"""
+
 import json
 import MySQLdb
 from datetime import date
@@ -5,6 +9,9 @@ from datetime import date
 
 # noinspection SqlDialectInspection
 class GcpDatabase:
+    """
+    provides gcp database utility for master application on google cloud
+    """
 
     def __init__(self):
         host, database, user, password = self.__get_database_details()

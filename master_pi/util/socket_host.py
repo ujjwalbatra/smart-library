@@ -1,8 +1,15 @@
+"""
+provides socket utility for listening for login
+"""
+
 import json
 import socket
 
 
 class SocketHost(object):
+    """
+    provides socket utility for listening for login
+    """
     CONFIG_FILE = 'master_pi/config.json'
 
     def __init__(self):

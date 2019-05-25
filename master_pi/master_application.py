@@ -1,3 +1,7 @@
+"""
+master application's controller
+"""
+
 import datetime
 import json
 import logging

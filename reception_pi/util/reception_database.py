@@ -1,8 +1,15 @@
+"""
+utility for database on reception pi
+"""
 import sqlite3
 
 
 # noinspection SqlDialectInspection
 class ReceptionDatabase(object):
+    """
+    local sqlite database utility for reception application
+    """
+
     def __init__(self, db_name):
         self.__db_conn = sqlite3.connect(db_name)
         self.__db_cursor = self.__db_conn.cursor()

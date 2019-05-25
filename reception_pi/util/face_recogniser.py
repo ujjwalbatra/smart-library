@@ -9,7 +9,8 @@ from imutils.video import VideoStream
 import face_recognition
 import cv2
 
-class FaceRecogniser():
+
+class FaceRecogniser(object):
     """
     Detects and matches faces to already encoded faces
     """

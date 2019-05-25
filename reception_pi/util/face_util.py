@@ -6,6 +6,7 @@ from .face_capturer import FaceCapturer
 from .face_encoder import FaceEncoder
 from .face_recogniser import FaceRecogniser
 
+
 class FaceUtil():
     """
     Provides methods for registering a face during user registration, and identifying faces on login

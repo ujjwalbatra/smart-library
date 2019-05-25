@@ -1,3 +1,7 @@
+"""
+SqlAlchemy models for smart library on gcp MySQL
+"""
+
 from configuration import db, ma
 from sqlalchemy import ForeignKey, Enum, or_, and_, cast, Date
 import datetime
@@ -5,12 +9,18 @@ import enum
 from pytz import timezone
 
 
-class MyEnum(enum.Enum):
+class Status(enum.Enum):
+    """
+    provides enum for book status
+    """
     borrowed = "borrowed"
     returned = "returned"
 
 
 class Book(db.Model):
+    """
+    book table of smart library database on gcp mysql
+    """
     __tablename__ = 'book'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(1000))
@@ -57,6 +67,9 @@ class Book(db.Model):
 
 
 class User(db.Model):
+    """
+    user table for smart library database on gcp mysql
+    """
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(255), index=True)
@@ -64,11 +77,14 @@ class User(db.Model):
 
 
 class BorrowRecord(db.Model):
+    """
+    borrow-recird table for smart library database on gcp mysql
+    """
     __tablename__ = 'borrow_record'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
     book_id = db.Column(db.Integer, ForeignKey('book.id'), nullable=False)
-    status = db.Column(Enum(MyEnum))
+    status = db.Column(Enum(Status))
     issue_date = db.Column(db.DateTime, nullable=False)
     return_date = db.Column(db.DateTime)
     actual_return_date = db.Column(db.DateTime)
@@ -86,15 +102,15 @@ class BorrowRecord(db.Model):
         last_week = datetime.datetime.now() - datetime.timedelta(days=7)
 
         books_borrowed_today = db.session.query(BorrowRecord). \
-            filter(BorrowRecord.status == MyEnum.borrowed). \
+            filter(BorrowRecord.status == Status.borrowed). \
             filter(BorrowRecord.issue_date.like(today)).count()
 
         books_returned_today = db.session.query(BorrowRecord). \
-            filter(BorrowRecord.status == MyEnum.returned). \
+            filter(BorrowRecord.status == Status.returned). \
             filter(BorrowRecord.actual_return_date.like(today)).count()
 
         books_borrowed_this_week = db.session.query(BorrowRecord). \
-            filter(BorrowRecord.status == MyEnum.returned). \
+            filter(BorrowRecord.status == Status.returned). \
             filter(and_(BorrowRecord.issue_date <= today, BorrowRecord.issue_date >= last_week)).count()
 
         books_returned_this_week = db.session.query(BorrowRecord). \
@@ -154,7 +170,7 @@ class BorrowRecord(db.Model):
             dates2.append(dynamic_date_start.date().__str__())
 
             books_returned = db.session.query(BorrowRecord). \
-                filter(BorrowRecord.status == MyEnum.returned). \
+                filter(BorrowRecord.status == Status.returned). \
                 filter(and_(BorrowRecord.actual_return_date >= dynamic_date_start,
                             BorrowRecord.actual_return_date <= dynamic_date_end)).count()
 
@@ -169,18 +185,32 @@ class BorrowRecord(db.Model):
 
 
 class BookSchema(ma.Schema):
+    """
+    used for serialization of Book type object
+    """
+
     def __init__(self, strict=True, **kwargs):
         super().__init__(strict=strict, **kwargs)
 
     class Meta:
+        """
+        limits exposure of field of book table
+        """
         # Fields to expose.
         fields = ("id", "title", "isbn", "published_year", "author", "total_copies", "copies_available")
 
 
 class BorrowRecordSchema(ma.Schema):
+    """
+    used for serialization of BorrowRecord type object
+    """
+
     def __init__(self, strict=True, **kwargs):
         super().__init__(strict=strict, **kwargs)
 
     class Meta:
+        """
+        limits exposure of field of borrow_record table
+        """
         # Fields to expose.
         fields = ("id", "status", "issue_date", "return_date", "actual_return_date")
