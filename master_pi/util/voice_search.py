@@ -1,3 +1,7 @@
+"""
+provides speech to text utility using google api
+"""
+
 import json
 import subprocess
 
@@ -5,6 +9,9 @@ import speech_recognition as sr
 
 
 class VoiceSearch(object):
+    """
+    provides speech to text utility using google api
+    """
 
     def __init__(self):
         self.__mic_name = self.__get_mic_details()

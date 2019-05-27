@@ -143,7 +143,7 @@ class ReceptionApplication(object):
         while registration_unsuccessful:
             username = input("\nEnter Username (must be at-least 5 characters, no special characters allowed): ")
             username = username.strip()  # remove leading and trailing spaces
-            username_is_valid = validate_input.validate_username(username) 
+            username_is_valid = validate_input.validate_username(username)
             if not username_is_valid:
                 print("Invalid username. Try again.")
                 continue
@@ -177,7 +177,7 @@ class ReceptionApplication(object):
                 print("Invalid password. Try again.")
                 continue
 
-            #Test connection to master pi before registering locally
+            # Test connection to master pi before registering locally
             print("Testing connection to master...")
             test_status = self.__socket_client.send_message(json.dumps({'action': 'test'}))
             if test_status == "SUCCESS":
@@ -206,7 +206,6 @@ class ReceptionApplication(object):
             elif status == "FAILURE":
                 print("Failed to register, error in master pi\n")
                 return
-
 
             registration_unsuccessful = False
 
@@ -250,6 +249,9 @@ class ReceptionApplication(object):
         return pbkdf2_sha256.verify(password, hash_)
 
     def main(self):
+        """
+        shows menu and responds to user response
+        """
         try:
             self.__db_connection.create_table_user()
 

@@ -1,8 +1,14 @@
+"""
+provides utility to validate username, password and email id
+"""
 from validate_email import validate_email
 import re
 
 
 class InputValidation(object):
+    """
+    provides utility to validate username, password and email id
+    """
 
     @staticmethod
     def validate_email(email: str):

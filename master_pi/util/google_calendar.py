@@ -1,3 +1,9 @@
+"""
+provides functionality of creating calendar events
+Acknowledgement: Copyright of https://developers.google.com/calendar/create-events
+    used for educational learning only
+"""
+
 from __future__ import print_function
 import datetime
 import pickle
@@ -6,16 +12,12 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-"""
-    Acknowledgement: Copyright of https://developers.google.com/calendar/create-events
-    used for educational learning only
-"""
-
 
 class GoogleCalendar(object):
     """
-    provides funtionality of creating calendar events
+    provides functionality of creating calendar events
     """
+
     def __init__(self):
         self.SCOPES = ['https://www.googleapis.com/auth/calendar']
         self.__service = self.__authenticate_user()
@@ -27,8 +29,8 @@ class GoogleCalendar(object):
         """
 
         credentials = None
-        if os.path.exists('./master_pi/token.pickle'):
-            with open('./master_pi/token.pickle', 'rb') as token:
+        if os.path.exists('token.pickle'):
+            with open('token.pickle', 'rb') as token:
                 credentials = pickle.load(token)
 
         # If there are no (valid) credentials available, let the user log in.
@@ -37,10 +39,10 @@ class GoogleCalendar(object):
                 credentials.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    './master_pi/credentials.json', self.SCOPES)
+                    'credentials.json', self.SCOPES)
                 credentials = flow.run_local_server()
             # Save the credentials for the next run
-            with open('./master_pi/token.pickle', 'wb') as token:
+            with open('token.pickle', 'wb') as token:
                 pickle.dump(credentials, token)
 
         service = build('calendar', 'v3', credentials=credentials)
@@ -76,3 +78,7 @@ class GoogleCalendar(object):
         }
 
         self.__service.events().insert(calendarId='primary', body=event).execute()
+
+
+if __name__ == '__main__':
+    GoogleCalendar().create_event("12", 1, "   we", datetime.date.today())

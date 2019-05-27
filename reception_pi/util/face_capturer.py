@@ -39,9 +39,9 @@ class FaceCapturer():
         img_counter = 0
         while img_counter <= 9:
             key = input("Press ENTER to take photo, or q to quit")
-            #if key == "q":
-                #print("Aborting registration")
-                #return
+            # if key == "q":
+            # print("Aborting registration")
+            # return
 
             ret, frame = self.__camera.read()
             if not ret:
@@ -56,7 +56,7 @@ class FaceCapturer():
 
             for (x, y, w, h) in faces:
                 img_name = "{}/{:04}.jpg".format(folder, img_counter)
-                cv2.imwrite(img_name, frame[y : y + h, x : x + w])
+                cv2.imwrite(img_name, frame[y: y + h, x: x + w])
                 print("Photo {}/10 saved!".format(img_counter + 1))
                 img_counter += 1
 

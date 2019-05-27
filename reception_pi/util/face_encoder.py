@@ -9,7 +9,7 @@ import face_recognition
 import cv2
 
 
-class FaceEncoder():
+class FaceEncoder(object):
     """
     Encodes faces stored in the dataset directory then saves them with usernames
     """
