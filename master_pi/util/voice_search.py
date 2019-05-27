@@ -63,7 +63,7 @@ class VoiceSearch(object):
 
             print(message)
             try:
-                audio = r.listen(source, timeout=5)
+                audio = r.listen(source, timeout=2.5)
             except sr.WaitTimeoutError:
                 print("Listening timed out whilst waiting for voice")
                 return None
