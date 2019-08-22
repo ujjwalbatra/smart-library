@@ -1,29 +1,45 @@
+"""
+reception_application.py
+====================================
+The core module of my smart library's reception pi
+"""
+
 import getpass
 import json
 from datetime import datetime
 from sqlite3 import Error
 import logging
 from passlib.hash import pbkdf2_sha256
+from util import reception_database
+from util import input_validation
+from util import socket_client
+from util import face_util
 
-from util import reception_database, input_validation
-
-logging.basicConfig(filename="./reception_pi/logs/reception-application.log", filemode='a', level=logging.DEBUG)
+logging.basicConfig(filename="./reception_pi/logs/reception_application.log", filemode='a', level=logging.DEBUG)
 
 
 class ReceptionApplication(object):
+    """
+    main controller for reception pi.
+    """
+
     def __init__(self):
-        self.__db_name = self.__get_database_filename()
+        self.__db_name = './reception_pi/' + self.__get_database_filename()
         self.__db_connection = reception_database.ReceptionDatabase(self.__db_name)
+        self.__socket_client = socket_client.SocketClient()
+        self.__face_util = face_util.FaceUtil()
 
     def __get_database_filename(self):
         """
         Gets name of database form config.json
 
-        Returns: name of the database
+
+        Returns:
+            string: name of th database
         """
         with open('./reception_pi/config.json') as json_file:
             data = json.load(json_file)
-            return data['database']['test']
+            return data['database']['production']
 
     def handle_login(self):
         """
@@ -49,12 +65,19 @@ class ReceptionApplication(object):
             valid_credentials = self.__verify_hash(password, hash_)
 
             if valid_credentials:
+                print("Logging in to master...")
+
                 data_for_mp = {'action': 'login', 'user': user}
                 json_data_for_mp = json.dumps(data_for_mp)
 
-                # todo: send json message to MP
-                print("Logged in....waiting for the sockets to work!")
-                pass
+                status = self.__socket_client.send_message_and_wait(json_data_for_mp)
+
+                if status == "logout":
+                    try_login = 0
+                    print("Logged out by master")
+                elif status == "FAILURE":
+                    print("Failed to connect to master")
+
             else:
                 option_selected = input("\nInvalid username or password!"
                                         "\nEnter 1 to try again or any other key to go back to the previous menu\n")
@@ -62,6 +85,49 @@ class ReceptionApplication(object):
                     try_login = int(option_selected)
                 except ValueError:
                     try_login = 99
+
+    def handle_login_with_face(self):
+        """
+        Captures the user's face and matches it against registered user's faces
+        Also notifies MasterPi if user is logged in.
+        """
+        try_login = 1
+
+        # multiple login trials
+        while try_login == 1:
+            print("\nLook at camera to login...")
+            recognised_users = self.__face_util.identify_face()
+
+            if not recognised_users:
+                print("\nNo face detected! Please try again")
+                return
+
+            if len(recognised_users) > 1:
+                print("\nMultiple faces detected! Please try again")
+                return
+
+            user = recognised_users[0]
+
+            row = self.__db_connection.get_password_by_user(user)
+
+            if row is None:
+                print("\nUser no longer exists! Please try again")
+                return
+
+            print("Logging in to master...")
+
+            data_for_mp = {'action': 'login', 'user': user}
+            json_data_for_mp = json.dumps(data_for_mp)
+
+            status = self.__socket_client.send_message_and_wait(json_data_for_mp)
+            print(status)
+
+            if status == "logout":
+                try_login = 0
+                print("Logged out by master")
+            elif status == "FAILURE":
+                print("Failed to connect to master")
+                break
 
     def handle_register(self):
         """
@@ -78,7 +144,6 @@ class ReceptionApplication(object):
             username = input("\nEnter Username (must be at-least 5 characters, no special characters allowed): ")
             username = username.strip()  # remove leading and trailing spaces
             username_is_valid = validate_input.validate_username(username)
-
             if not username_is_valid:
                 print("Invalid username. Try again.")
                 continue
@@ -112,17 +177,35 @@ class ReceptionApplication(object):
                 print("Invalid password. Try again.")
                 continue
 
+            # Test connection to master pi before registering locally
+            print("Testing connection to master...")
+            test_status = self.__socket_client.send_message(json.dumps({'action': 'test'}))
+            if test_status == "SUCCESS":
+                print("Able to connect to master")
+            elif test_status == "FAILURE":
+                print("Failed to register, could not connect to master pi")
+                return
+
+            print("\nPlease look at camera to register face")
+            self.__face_util.register_face(username)
+
             password_hash = self.__hash_password(password)
+
+            print("\nRegistering user...")
+
             self.__db_connection.insert_user(username, email, password_hash)
-
-            print("\nRegistration successful...\n")
-
             user_id = self.__db_connection.get_user_id(username)
 
             data_for_mp = {'action': 'register', 'id': user_id, 'username': username, 'email': email}
             json_data_for_mp = json.dumps(data_for_mp)
 
-            # todo: send registration info in json to mp
+            status = self.__socket_client.send_message(json_data_for_mp)
+
+            if status == "SUCCESS":
+                print("Registration successful!\n")
+            elif status == "FAILURE":
+                print("Failed to register, error in master pi\n")
+                return
 
             registration_unsuccessful = False
 
@@ -166,6 +249,9 @@ class ReceptionApplication(object):
         return pbkdf2_sha256.verify(password, hash_)
 
     def main(self):
+        """
+        shows menu and responds to user response
+        """
         try:
             self.__db_connection.create_table_user()
 
@@ -173,8 +259,12 @@ class ReceptionApplication(object):
 
             # wait for a valid input from user
             while not quit_reception_application:
-                option_selected = input("\nPlease select one of the following option: "
-                                        "\n\t1. Login\n\t2. Register a new account\n\t3. Quit\n")
+                option_selected = input("\nPlease select one of the following option:\n"
+                                        "\t1. Login\n"
+                                        "\t2. Login with facial recognition\n"
+                                        "\t3. Register a new account\n"
+                                        "\t4. Quit\n"
+                                        "\nSelect an option: ")
 
                 # if user input is not an integer then ask for input again
                 try:
@@ -185,13 +275,16 @@ class ReceptionApplication(object):
                 if option_selected == 1:
                     self.handle_login()
                 elif option_selected == 2:
-                    self.handle_register()
+                    self.handle_login_with_face()
                 elif option_selected == 3:
+                    self.handle_register()
+                elif option_selected == 4:
                     quit_reception_application = True
                 else:
                     print("\nInvalid Input! Try again.", end="\n")
-        except Error as e:
-            logging.warning("DB: " + e.__str__() + " " + datetime.now().__str__())
+
+        except Error as error:
+            logging.warning("DB: " + error.__str__() + " " + datetime.now().__str__())
         finally:
             self.__db_connection.close_connection()
 

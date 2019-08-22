@@ -1,8 +1,14 @@
+"""
+provides utility to validate username, password and email id
+"""
 from validate_email import validate_email
 import re
 
 
 class InputValidation(object):
+    """
+    provides utility to validate username, password and email id
+    """
 
     @staticmethod
     def validate_email(email: str):
@@ -33,7 +39,7 @@ class InputValidation(object):
             boolean: a boolean specifying whether the username is valid or not
         """
 
-        is_valid = re.search("\s+", username)
+        is_valid = re.search(r"\s+", username)
         if is_valid:
             return False
 
