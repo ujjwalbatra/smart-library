@@ -18,7 +18,7 @@ Jinja2==2.10.1
 MarkupSafe==1.1.1
 marshmallow==2.19.2
 mysqlclient==1.4.2.post1
-numpy==1.16.3
+numpy==1.22.0
 oauthlib==3.0.1
 opencv-python==3.4.4.19
 pkg-resources==0.0.0
